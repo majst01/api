@@ -1,0 +1,259 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "api/v1/common.proto";
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// TenantService serves tenant related functions
+service TenantService {
+  // Create a tenant
+  rpc Create(TenantServiceCreateRequest) returns (TenantServiceCreateResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (tenant_roles) = TENANT_ROLE_EDITOR;
+  }
+  // Get a tenant
+  rpc Get(TenantServiceGetRequest) returns (TenantServiceGetResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (tenant_roles) = TENANT_ROLE_EDITOR;
+    option (tenant_roles) = TENANT_ROLE_VIEWER;
+    option (auditing) = AUDITING_EXCLUDED;
+  }
+  // Update a tenant
+  rpc Update(TenantServiceUpdateRequest) returns (TenantServiceUpdateResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (tenant_roles) = TENANT_ROLE_EDITOR;
+  }
+  // Delete a tenant
+  rpc Delete(TenantServiceDeleteRequest) returns (TenantServiceDeleteResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (tenant_roles) = TENANT_ROLE_EDITOR;
+  }
+
+  // RemoveMember remove a user from a tenant
+  rpc RemoveMember(TenantServiceRemoveMemberRequest) returns (TenantServiceRemoveMemberResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (auditing) = AUDITING_INCLUDED;
+  }
+  // Invite a user to a tenant
+  rpc Invite(TenantServiceInviteRequest) returns (TenantServiceInviteResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (auditing) = AUDITING_INCLUDED;
+  }
+  // InviteAccept is called from a user to accept a invitation
+  rpc InviteAccept(TenantServiceInviteAcceptRequest) returns (TenantServiceInviteAcceptResponse) {
+    option (visibility) = VISIBILITY_SELF;
+    option (auditing) = AUDITING_INCLUDED;
+  }
+  // InviteDelete deletes a pending invitation
+  rpc InviteDelete(TenantServiceInviteDeleteRequest) returns (TenantServiceInviteDeleteResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (auditing) = AUDITING_INCLUDED;
+  }
+  // InvitesList list all invites to a tenant
+  rpc InvitesList(TenantServiceInvitesListRequest) returns (TenantServiceInvitesListResponse) {
+    option (tenant_roles) = TENANT_ROLE_OWNER;
+    option (auditing) = AUDITING_EXCLUDED;
+  }
+  // InviteGet get an invite
+  rpc InviteGet(TenantServiceInviteGetRequest) returns (TenantServiceInviteGetResponse) {
+    option (visibility) = VISIBILITY_SELF;
+    option (auditing) = AUDITING_EXCLUDED;
+  }
+}
+
+// Tenant is a customer of the platform
+message Tenant {
+  // Login of the tenant
+  string login = 1;
+  // Name if the tenant
+  string name = 2;
+  // Email of the tenant
+  string email = 3;
+  // AvatarUrl of the tenant
+  string avatar_url = 5;
+  // TenantMembers in this tenant
+  repeated TenantMember tenant_members = 14;
+  // CreatedAt the date when this tenant was created
+  google.protobuf.Timestamp created_at = 20;
+  // UpdatedAt the date when this tenant was updated
+  google.protobuf.Timestamp updated_at = 21;
+  // DeletedAt the date when this tenant was deleted
+  google.protobuf.Timestamp deleted_at = 22;
+}
+
+// TenantMember defines a user that participates at a tenant
+message TenantMember {
+  // Id is the user id of the member
+  string id = 1;
+  // Role is the role of the member
+  TenantRole role = 2;
+  // CreatedAt the date when the member was added to the tenant
+  google.protobuf.Timestamp created_at = 10;
+}
+
+// TenantInvite defines invite to tenant
+message TenantInvite {
+  // Secret is the secret part of the invite, typically part of the url
+  string secret = 1;
+  // TargetTenant is the tenant id for which this invite was created
+  string target_tenant = 2;
+  // Role is the role in this tenant the user will get after accepting the invitation
+  TenantRole role = 3;
+  // Joined is false as long as a user has not accepted the invite
+  bool joined = 4;
+  // TargetTenantName is the tenant name for which this invite was created
+  string target_tenant_name = 5;
+  // Tenant is the login of tenant who invites to join this tenant
+  string tenant = 6;
+  // TenantName is the name of tenant who invites to join this tenant
+  string tenant_name = 7;
+  // ExpiresAt the date when this invite expires
+  google.protobuf.Timestamp expires_at = 10;
+  // JoinedAt the date when the member accepted this invite
+  google.protobuf.Timestamp joined_at = 11;
+}
+
+// TenantServiceGetRequest is the request payload of the tenant get request
+message TenantServiceGetRequest {
+  // Login of the tenant
+  string login = 1;
+}
+
+// TenantServiceCreateRequest is the request payload of the tenant create request
+message TenantServiceCreateRequest {
+  // Tenant the tenant to create
+  Tenant tenant = 1;
+}
+
+// TenantServiceCreateOrUpdateRequest is the request payload of the tenant create or update request
+message TenantServiceCreateOrUpdateRequest {
+  // Tenant the tenant to create or update
+  Tenant tenant = 1;
+}
+
+// TenantServiceUpdateRequest is the request payload of the tenant update request
+message TenantServiceUpdateRequest {
+  // Login of the tenant
+  string login = 1;
+  // Name of the tenant
+  optional string name = 2;
+  // Email of the tenant
+  optional string email = 3;
+  // AvatarUrl of the tenant
+  optional string avatar_url = 5;
+}
+
+// TenantServiceDeleteRequest is the request payload of the tenant delete request
+message TenantServiceDeleteRequest {
+  // Login of the tenant
+  string login = 1;
+}
+
+// TenantServiceGetResponse is the response payload of the tenant get request
+message TenantServiceGetResponse {
+  // Tenant is the tenant
+  Tenant tenant = 1;
+}
+
+// TenantServiceCreateResponse is the response payload of the tenant create request
+message TenantServiceCreateResponse {
+  // Tenant is the tenant
+  Tenant tenant = 1;
+}
+
+// TenantServiceCreateOrUpdateResponse is the response payload of the tenant create or update request
+message TenantServiceCreateOrUpdateResponse {
+  // Tenant is the tenant
+  Tenant tenant = 1;
+}
+
+// TenantServiceUpdateResponse is the response payload of the tenant update request
+message TenantServiceUpdateResponse {
+  // Tenant is the tenant
+  Tenant tenant = 1;
+}
+
+// TenantServiceDeleteResponse is the response payload of the tenant delete request
+message TenantServiceDeleteResponse {
+  // Tenant is the tenant
+  Tenant tenant = 1;
+}
+
+// TenantServiceInviteRequest is used to invite a member to a tenant
+message TenantServiceInviteRequest {
+  // Tenant is the uuid of the tenant
+  string tenant = 1 [(buf.validate.field).string.uuid = true];
+
+  // Role of this user in this tenant
+  TenantRole role = 3;
+}
+
+// TenantServiceInviteRequest is the response payload to a invite member request
+message TenantServiceInviteResponse {
+  // Inviter contains a secret which can be sent to a potential user
+  // can appended to the invitation endpoint at our api server like
+  // console.metalstack.cloud/invite/<secret>
+  TenantInvite invite = 1;
+}
+
+// TenantServiceInvitesListRequest is the request payload to a list invites request
+message TenantServiceInvitesListRequest {
+  // Tenant is the uuid of the tenant
+  string tenant = 1 [(buf.validate.field).string.uuid = true];
+}
+
+// TenantServiceInvitesListResponse is the response payload to a list invites request
+message TenantServiceInvitesListResponse {
+  // Invites not already accepted the invitation to this tenant
+  repeated TenantInvite invites = 1;
+}
+
+// TenantServiceInviteGetRequest is the request payload to get a invite
+message TenantServiceInviteGetRequest {
+  // Secret of the invite to list
+  string secret = 1;
+}
+
+// TenantServiceInviteGetResponse is the response payload to a get invite request
+message TenantServiceInviteGetResponse {
+  // Invite is the invite
+  TenantInvite invite = 1;
+}
+
+// TenantServiceRemoveMemberRequest is used to remove a member from a tenant
+message TenantServiceRemoveMemberRequest {
+  // Tenant is the uuid of the tenant
+  string tenant = 1 [(buf.validate.field).string.uuid = true];
+  // MemberID is the id of the member to remove from this tenant
+  string member_id = 2;
+}
+
+// TenantServiceRemoveMemberResponse is the response payload to a remove member request
+message TenantServiceRemoveMemberResponse {}
+
+// TenantServiceInviteAcceptRequest is the request payload to a accept invite request
+message TenantServiceInviteAcceptRequest {
+  // Secret is the invitation secret part of the invitation url
+  string secret = 1;
+}
+
+// TenantServiceInvitesListResponse is the response payload to a accept invite request
+message TenantServiceInviteAcceptResponse {
+  // Tenant ID of the tenant joined
+  string tenant = 1;
+  // TenantName if the tenant joined
+  string tenant_name = 2;
+}
+
+// TenantServiceInviteDeleteRequest is the request payload to a delete invite
+message TenantServiceInviteDeleteRequest {
+  // Tenant is the uuid of the tenant
+  string tenant = 1 [(buf.validate.field).string.uuid = true];
+  // Secret of the invite to delete
+  string secret = 2;
+}
+
+// TenantServiceInviteDeleteResponse is the response payload of a delete invite request
+message TenantServiceInviteDeleteResponse {}

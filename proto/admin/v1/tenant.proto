@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package admin.v1;
+
+import "api/v1/common.proto";
+import "api/v1/tenant.proto";
+
+// TenantService serves tenant related functions
+service TenantService {
+  // List tenants
+  rpc List(TenantServiceListRequest) returns (TenantServiceListResponse) {
+    option (api.v1.admin_roles) = ADMIN_ROLE_EDITOR;
+    option (api.v1.admin_roles) = ADMIN_ROLE_VIEWER;
+  }
+}
+
+// TenantServiceListRequest is the request payload for a tenant list request
+message TenantServiceListRequest {
+  // Login of the tenant to list
+  optional string login = 1;
+  // Name of the tenant to list
+  optional string name = 2;
+  // Email of the tenant to list
+  optional string email = 3;
+  // Paging details for the list request
+  api.v1.Paging paging = 7;
+}
+
+// TenantServiceListResponse is the response payload for a tenant list request
+message TenantServiceListResponse {
+  // Tenants are the list of tenants
+  repeated api.v1.Tenant tenants = 1;
+  // NextPage is used for pagination, returns the next page to be fetched and must then be provided in the list request.
+  optional uint64 next_page = 2;
+}
