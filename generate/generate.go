@@ -88,9 +88,9 @@ func servicePermissions(root string) (*permissions.ServicePermissions, error) {
 			return files, err
 		}
 		roles = permissions.Roles{
-			Admin:   &permissions.Admin{},
-			Tenant:  &permissions.Tenant{},
-			Project: &permissions.Project{},
+			Admin:   permissions.Admin{},
+			Tenant:  permissions.Tenant{},
+			Project: permissions.Project{},
 		}
 		methods    = permissions.Methods{}
 		visibility = permissions.Visibility{
@@ -102,9 +102,8 @@ func servicePermissions(root string) (*permissions.ServicePermissions, error) {
 			Private: map[string]bool{},
 			Self:    map[string]bool{},
 		}
-		chargeable = permissions.Chargeable{}
-		auditable  = permissions.Auditable{}
-		services   = []string{}
+		auditable = permissions.Auditable{}
+		services  = []string{}
 	)
 
 	files, err := walk(root)
@@ -120,43 +119,45 @@ func servicePermissions(root string) (*permissions.ServicePermissions, error) {
 		}
 		for _, serviceDesc := range fd.GetService() {
 			serviceDesc := serviceDesc
-			services = append(services, fmt.Sprintf("%s.%s", fd.GetPackage(), serviceDesc.GetName()))
+			services = append(services, fmt.Sprintf("%s.%s", *fd.Package, *serviceDesc.Name))
 			for _, method := range serviceDesc.GetMethod() {
 				method := method
-				methodName := fmt.Sprintf("/%s.%s/%s", fd.GetPackage(), serviceDesc.GetName(), method.GetName())
-				methodOpts := method.GetOptions().GetUninterpretedOption()
+				methodName := fmt.Sprintf("/%s.%s/%s", *fd.Package, *serviceDesc.Name, *method.Name)
+				methodOpts := method.Options.GetUninterpretedOption()
 				for _, methodOpt := range methodOpts {
 					methodOpt := methodOpt
-					for _, namePart := range methodOpt.GetName() {
+					for _, namePart := range methodOpt.Name {
 						namePart := namePart
-						if !namePart.GetIsExtension() {
+						if !*namePart.IsExtension {
 							continue
 						}
 						auditable[methodName] = true
 						// Tenant
-						switch methodOpt.GetIdentifierValue() {
+						switch *methodOpt.IdentifierValue {
 						case v1.TenantRole_TENANT_ROLE_OWNER.String():
-							roles.Tenant.Owner = append(roles.Tenant.Owner, methodName)
+							roles.Tenant[v1.TenantRole_TENANT_ROLE_OWNER.String()] = append(roles.Tenant[v1.TenantRole_TENANT_ROLE_OWNER.String()], methodName)
 						case v1.TenantRole_TENANT_ROLE_EDITOR.String():
-							roles.Tenant.Editor = append(roles.Tenant.Editor, methodName)
+							roles.Tenant[v1.TenantRole_TENANT_ROLE_EDITOR.String()] = append(roles.Tenant[v1.TenantRole_TENANT_ROLE_EDITOR.String()], methodName)
 						case v1.TenantRole_TENANT_ROLE_VIEWER.String():
-							roles.Tenant.Viewer = append(roles.Tenant.Viewer, methodName)
+							roles.Tenant[v1.TenantRole_TENANT_ROLE_VIEWER.String()] = append(roles.Tenant[v1.TenantRole_TENANT_ROLE_VIEWER.String()], methodName)
+						case v1.TenantRole_TENANT_ROLE_GUEST.String():
+							roles.Tenant[v1.TenantRole_TENANT_ROLE_GUEST.String()] = append(roles.Tenant[v1.TenantRole_TENANT_ROLE_GUEST.String()], methodName)
 						case v1.TenantRole_TENANT_ROLE_UNSPECIFIED.String():
 							// noop
 						// Project
 						case v1.ProjectRole_PROJECT_ROLE_OWNER.String():
-							roles.Project.Owner = append(roles.Project.Owner, methodName)
+							roles.Project[v1.ProjectRole_PROJECT_ROLE_OWNER.String()] = append(roles.Project[v1.ProjectRole_PROJECT_ROLE_OWNER.String()], methodName)
 						case v1.ProjectRole_PROJECT_ROLE_EDITOR.String():
-							roles.Project.Editor = append(roles.Project.Editor, methodName)
+							roles.Project[v1.ProjectRole_PROJECT_ROLE_EDITOR.String()] = append(roles.Project[v1.ProjectRole_PROJECT_ROLE_EDITOR.String()], methodName)
 						case v1.ProjectRole_PROJECT_ROLE_VIEWER.String():
-							roles.Project.Viewer = append(roles.Project.Viewer, methodName)
+							roles.Project[v1.ProjectRole_PROJECT_ROLE_VIEWER.String()] = append(roles.Project[v1.ProjectRole_PROJECT_ROLE_VIEWER.String()], methodName)
 						case v1.ProjectRole_PROJECT_ROLE_UNSPECIFIED.String():
 							// noop
 						// Admin
 						case v1.AdminRole_ADMIN_ROLE_EDITOR.String():
-							roles.Admin.Editor = append(roles.Admin.Editor, methodName)
+							roles.Admin[v1.AdminRole_ADMIN_ROLE_EDITOR.String()] = append(roles.Admin[v1.AdminRole_ADMIN_ROLE_EDITOR.String()], methodName)
 						case v1.AdminRole_ADMIN_ROLE_VIEWER.String():
-							roles.Admin.Viewer = append(roles.Admin.Viewer, methodName)
+							roles.Admin[v1.AdminRole_ADMIN_ROLE_VIEWER.String()] = append(roles.Admin[v1.AdminRole_ADMIN_ROLE_VIEWER.String()], methodName)
 						case v1.AdminRole_ADMIN_ROLE_UNSPECIFIED.String():
 							// noop
 						// Visibility
@@ -177,7 +178,7 @@ func servicePermissions(root string) (*permissions.ServicePermissions, error) {
 							auditable[methodName] = true
 						// noop
 						default:
-							return nil, fmt.Errorf("unknown method identifier value detected:%s", methodOpt.GetIdentifierValue())
+							return nil, fmt.Errorf("unknown method identifier value detected:%s", *methodOpt.IdentifierValue)
 
 						}
 						methods[methodName] = true
@@ -191,7 +192,6 @@ func servicePermissions(root string) (*permissions.ServicePermissions, error) {
 		Roles:      roles,
 		Methods:    methods,
 		Visibility: visibility,
-		Chargeable: chargeable,
 		Auditable:  auditable,
 		Services:   services,
 	}
@@ -227,7 +227,7 @@ func svcs(root string) (map[string]api, error) {
 		if err != nil {
 			return nil, err
 		}
-		n := strings.ReplaceAll(fd.GetPackage(), ".", "")
+		n := strings.ReplaceAll(*fd.Package, ".", "")
 		a, ok := result[n]
 		if !ok {
 			a = api{
@@ -236,7 +236,7 @@ func svcs(root string) (map[string]api, error) {
 			}
 		}
 		for _, serviceDesc := range fd.GetService() {
-			a.Services = append(a.Services, serviceDesc.GetName())
+			a.Services = append(a.Services, *serviceDesc.Name)
 		}
 		result[n] = a
 	}

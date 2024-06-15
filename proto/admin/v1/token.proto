@@ -38,8 +38,8 @@ message TokenServiceRevokeRequest {
   string uuid = 1 [(buf.validate.field).string.uuid = true];
   // UserId is the id of the user for which the token should be revoked
   string user_id = 2 [(buf.validate.field).string = {
-    min_len: 2,
-    max_len: 512,
+    min_len: 2
+    max_len: 512
   }];
 }
 

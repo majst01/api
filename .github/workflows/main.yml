@@ -21,6 +21,9 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v4
 
+    - name: Check spelling
+      uses: crate-ci/typos@master
+
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
@@ -28,7 +31,7 @@ jobs:
         cache: false
 
     - name: Lint
-      uses: golangci/golangci-lint-action@v4
+      uses: golangci/golangci-lint-action@v6
       with:
         args: -p bugs -p unused --timeout=5m
 

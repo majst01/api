@@ -256,6 +256,36 @@ func (_m *TenantServiceClient) InvitesList(_a0 context.Context, _a1 *connect.Req
 	return r0, r1
 }
 
+// List provides a mock function with given fields: _a0, _a1
+func (_m *TenantServiceClient) List(_a0 context.Context, _a1 *connect.Request[apiv1.TenantServiceListRequest]) (*connect.Response[apiv1.TenantServiceListResponse], error) {
+	ret := _m.Called(_a0, _a1)
+
+	if len(ret) == 0 {
+		panic("no return value specified for List")
+	}
+
+	var r0 *connect.Response[apiv1.TenantServiceListResponse]
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *connect.Request[apiv1.TenantServiceListRequest]) (*connect.Response[apiv1.TenantServiceListResponse], error)); ok {
+		return rf(_a0, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *connect.Request[apiv1.TenantServiceListRequest]) *connect.Response[apiv1.TenantServiceListResponse]); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*connect.Response[apiv1.TenantServiceListResponse])
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *connect.Request[apiv1.TenantServiceListRequest]) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // RemoveMember provides a mock function with given fields: _a0, _a1
 func (_m *TenantServiceClient) RemoveMember(_a0 context.Context, _a1 *connect.Request[apiv1.TenantServiceRemoveMemberRequest]) (*connect.Response[apiv1.TenantServiceRemoveMemberResponse], error) {
 	ret := _m.Called(_a0, _a1)
@@ -308,6 +338,36 @@ func (_m *TenantServiceClient) Update(_a0 context.Context, _a1 *connect.Request[
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, *connect.Request[apiv1.TenantServiceUpdateRequest]) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateMember provides a mock function with given fields: _a0, _a1
+func (_m *TenantServiceClient) UpdateMember(_a0 context.Context, _a1 *connect.Request[apiv1.TenantServiceUpdateMemberRequest]) (*connect.Response[apiv1.TenantServiceUpdateMemberResponse], error) {
+	ret := _m.Called(_a0, _a1)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateMember")
+	}
+
+	var r0 *connect.Response[apiv1.TenantServiceUpdateMemberResponse]
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *connect.Request[apiv1.TenantServiceUpdateMemberRequest]) (*connect.Response[apiv1.TenantServiceUpdateMemberResponse], error)); ok {
+		return rf(_a0, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *connect.Request[apiv1.TenantServiceUpdateMemberRequest]) *connect.Response[apiv1.TenantServiceUpdateMemberResponse]); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*connect.Response[apiv1.TenantServiceUpdateMemberResponse])
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *connect.Request[apiv1.TenantServiceUpdateMemberRequest]) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)

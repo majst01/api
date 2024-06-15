@@ -29,24 +29,28 @@ message Token {
   string uuid = 1 [(buf.validate.field).string.uuid = true];
   // UserId who created this token
   string user_id = 2 [(buf.validate.field).string = {
-    min_len: 2,
-    max_len: 512,
+    min_len: 2
+    max_len: 512
   }];
   // Description is a user given description of this token.
   string description = 3 [(buf.validate.field).string = {
-    min_len: 2,
-    max_len: 256,
+    min_len: 2
+    max_len: 256
   }];
   // Permissions is a list of service methods this token can be used for
   repeated MethodPermission permissions = 4;
-  // Roles is a list of roles this token can be used for
-  repeated TokenRole roles = 5;
   // Expires gives the date in the future after which this token can not be used anymore
-  google.protobuf.Timestamp expires = 6;
+  google.protobuf.Timestamp expires = 5;
   // IssuedAt gives the date when this token was created
-  google.protobuf.Timestamp issued_at = 7;
+  google.protobuf.Timestamp issued_at = 6;
   // TokenType describes the type of this token
-  TokenType token_type = 8;
+  TokenType token_type = 7;
+  // ProjectRoles associates a project id with the corresponding role of the token owner
+  map<string, ProjectRole> project_roles = 8;
+  // TenantRoles associates a tenant id with the corresponding role of the token owner
+  map<string, TenantRole> tenant_roles = 9;
+  // AdminRole defines the admin role of the token owner
+  optional AdminRole admin_role = 10;
 }
 
 // TokenType specifies different use cases of tokens
@@ -63,45 +67,32 @@ enum TokenType {
 message TokenServiceCreateRequest {
   // Description of the token
   string description = 1 [(buf.validate.field).string = {
-    min_len: 2,
-    max_len: 256,
+    min_len: 2
+    max_len: 256
   }];
   // Permissions is a list of service methods this token can be used for
   repeated MethodPermission permissions = 2;
-  // Roles is a list of roles this token can be used for
-  repeated TokenRole roles = 3;
   // Expires gives the duration since now, after which this token can not be used anymore
-  google.protobuf.Duration expires = 4 [(buf.validate.field).duration = {
-    lt: {seconds: 31536001},
+  google.protobuf.Duration expires = 3 [(buf.validate.field).duration = {
+    // Between 10min and 1year
+    lt: {seconds: 31536001}
     gte: {seconds: 600}
   }];
+  // ProjectRoles associates a project id with the corresponding role of the token owner
+  map<string, ProjectRole> project_roles = 4;
+  // TenantRoles associates a tenant id with the corresponding role of the token owner
+  map<string, TenantRole> tenant_roles = 5;
+  // AdminRole defines the admin role of the token owner
+  optional AdminRole admin_role = 6;
 }
 
 // MethodPermission is a mapping from a subject/project to a service method
 message MethodPermission {
-  // Subject maybe either the project or the organization
+  // Subject maybe either the project or the tenant
   // for which the methods should be allowed
   string subject = 1;
   // Methods which should be accessible
   repeated string methods = 2;
-}
-
-// TokenRole is a mapping from subject to role there
-message TokenRole {
-  // Subject specifies the subject (project or organization) this role applies to
-  string subject = 1 [(buf.validate.field).string = {
-    min_len: 1, // when requesting admin permissions with *
-    max_len: 256,
-  }];
-  // Role defines the string representation of a tenantrole, projectrole or a global adminrole
-  string role = 2 [(buf.validate.field).string = {
-    in: [
-      "admin",
-      "owner",
-      "editor",
-      "viewer"
-    ]
-  }];
 }
 
 // TokenServiceCreateResponse is the response payload of a token create request

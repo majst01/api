@@ -35,6 +35,8 @@ const (
 const (
 	// TenantServiceCreateProcedure is the fully-qualified name of the TenantService's Create RPC.
 	TenantServiceCreateProcedure = "/api.v1.TenantService/Create"
+	// TenantServiceListProcedure is the fully-qualified name of the TenantService's List RPC.
+	TenantServiceListProcedure = "/api.v1.TenantService/List"
 	// TenantServiceGetProcedure is the fully-qualified name of the TenantService's Get RPC.
 	TenantServiceGetProcedure = "/api.v1.TenantService/Get"
 	// TenantServiceUpdateProcedure is the fully-qualified name of the TenantService's Update RPC.
@@ -44,6 +46,9 @@ const (
 	// TenantServiceRemoveMemberProcedure is the fully-qualified name of the TenantService's
 	// RemoveMember RPC.
 	TenantServiceRemoveMemberProcedure = "/api.v1.TenantService/RemoveMember"
+	// TenantServiceUpdateMemberProcedure is the fully-qualified name of the TenantService's
+	// UpdateMember RPC.
+	TenantServiceUpdateMemberProcedure = "/api.v1.TenantService/UpdateMember"
 	// TenantServiceInviteProcedure is the fully-qualified name of the TenantService's Invite RPC.
 	TenantServiceInviteProcedure = "/api.v1.TenantService/Invite"
 	// TenantServiceInviteAcceptProcedure is the fully-qualified name of the TenantService's
@@ -63,10 +68,12 @@ const (
 var (
 	tenantServiceServiceDescriptor            = v1.File_api_v1_tenant_proto.Services().ByName("TenantService")
 	tenantServiceCreateMethodDescriptor       = tenantServiceServiceDescriptor.Methods().ByName("Create")
+	tenantServiceListMethodDescriptor         = tenantServiceServiceDescriptor.Methods().ByName("List")
 	tenantServiceGetMethodDescriptor          = tenantServiceServiceDescriptor.Methods().ByName("Get")
 	tenantServiceUpdateMethodDescriptor       = tenantServiceServiceDescriptor.Methods().ByName("Update")
 	tenantServiceDeleteMethodDescriptor       = tenantServiceServiceDescriptor.Methods().ByName("Delete")
 	tenantServiceRemoveMemberMethodDescriptor = tenantServiceServiceDescriptor.Methods().ByName("RemoveMember")
+	tenantServiceUpdateMemberMethodDescriptor = tenantServiceServiceDescriptor.Methods().ByName("UpdateMember")
 	tenantServiceInviteMethodDescriptor       = tenantServiceServiceDescriptor.Methods().ByName("Invite")
 	tenantServiceInviteAcceptMethodDescriptor = tenantServiceServiceDescriptor.Methods().ByName("InviteAccept")
 	tenantServiceInviteDeleteMethodDescriptor = tenantServiceServiceDescriptor.Methods().ByName("InviteDelete")
@@ -78,17 +85,21 @@ var (
 type TenantServiceClient interface {
 	// Create a tenant
 	Create(context.Context, *connect.Request[v1.TenantServiceCreateRequest]) (*connect.Response[v1.TenantServiceCreateResponse], error)
+	// List tenants
+	List(context.Context, *connect.Request[v1.TenantServiceListRequest]) (*connect.Response[v1.TenantServiceListResponse], error)
 	// Get a tenant
 	Get(context.Context, *connect.Request[v1.TenantServiceGetRequest]) (*connect.Response[v1.TenantServiceGetResponse], error)
 	// Update a tenant
 	Update(context.Context, *connect.Request[v1.TenantServiceUpdateRequest]) (*connect.Response[v1.TenantServiceUpdateResponse], error)
 	// Delete a tenant
 	Delete(context.Context, *connect.Request[v1.TenantServiceDeleteRequest]) (*connect.Response[v1.TenantServiceDeleteResponse], error)
-	// RemoveMember remove a user from a tenant
+	// RemoveMember remove a member of a tenant
 	RemoveMember(context.Context, *connect.Request[v1.TenantServiceRemoveMemberRequest]) (*connect.Response[v1.TenantServiceRemoveMemberResponse], error)
+	// UpdateMember update a member of a tenant
+	UpdateMember(context.Context, *connect.Request[v1.TenantServiceUpdateMemberRequest]) (*connect.Response[v1.TenantServiceUpdateMemberResponse], error)
 	// Invite a user to a tenant
 	Invite(context.Context, *connect.Request[v1.TenantServiceInviteRequest]) (*connect.Response[v1.TenantServiceInviteResponse], error)
-	// InviteAccept is called from a user to accept a invitation
+	// InviteAccept is called from a user to accept an invitation
 	InviteAccept(context.Context, *connect.Request[v1.TenantServiceInviteAcceptRequest]) (*connect.Response[v1.TenantServiceInviteAcceptResponse], error)
 	// InviteDelete deletes a pending invitation
 	InviteDelete(context.Context, *connect.Request[v1.TenantServiceInviteDeleteRequest]) (*connect.Response[v1.TenantServiceInviteDeleteResponse], error)
@@ -114,6 +125,12 @@ func NewTenantServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(tenantServiceCreateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		list: connect.NewClient[v1.TenantServiceListRequest, v1.TenantServiceListResponse](
+			httpClient,
+			baseURL+TenantServiceListProcedure,
+			connect.WithSchema(tenantServiceListMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		get: connect.NewClient[v1.TenantServiceGetRequest, v1.TenantServiceGetResponse](
 			httpClient,
 			baseURL+TenantServiceGetProcedure,
@@ -136,6 +153,12 @@ func NewTenantServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			httpClient,
 			baseURL+TenantServiceRemoveMemberProcedure,
 			connect.WithSchema(tenantServiceRemoveMemberMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updateMember: connect.NewClient[v1.TenantServiceUpdateMemberRequest, v1.TenantServiceUpdateMemberResponse](
+			httpClient,
+			baseURL+TenantServiceUpdateMemberProcedure,
+			connect.WithSchema(tenantServiceUpdateMemberMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		invite: connect.NewClient[v1.TenantServiceInviteRequest, v1.TenantServiceInviteResponse](
@@ -174,10 +197,12 @@ func NewTenantServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 // tenantServiceClient implements TenantServiceClient.
 type tenantServiceClient struct {
 	create       *connect.Client[v1.TenantServiceCreateRequest, v1.TenantServiceCreateResponse]
+	list         *connect.Client[v1.TenantServiceListRequest, v1.TenantServiceListResponse]
 	get          *connect.Client[v1.TenantServiceGetRequest, v1.TenantServiceGetResponse]
 	update       *connect.Client[v1.TenantServiceUpdateRequest, v1.TenantServiceUpdateResponse]
 	delete       *connect.Client[v1.TenantServiceDeleteRequest, v1.TenantServiceDeleteResponse]
 	removeMember *connect.Client[v1.TenantServiceRemoveMemberRequest, v1.TenantServiceRemoveMemberResponse]
+	updateMember *connect.Client[v1.TenantServiceUpdateMemberRequest, v1.TenantServiceUpdateMemberResponse]
 	invite       *connect.Client[v1.TenantServiceInviteRequest, v1.TenantServiceInviteResponse]
 	inviteAccept *connect.Client[v1.TenantServiceInviteAcceptRequest, v1.TenantServiceInviteAcceptResponse]
 	inviteDelete *connect.Client[v1.TenantServiceInviteDeleteRequest, v1.TenantServiceInviteDeleteResponse]
@@ -188,6 +213,11 @@ type tenantServiceClient struct {
 // Create calls api.v1.TenantService.Create.
 func (c *tenantServiceClient) Create(ctx context.Context, req *connect.Request[v1.TenantServiceCreateRequest]) (*connect.Response[v1.TenantServiceCreateResponse], error) {
 	return c.create.CallUnary(ctx, req)
+}
+
+// List calls api.v1.TenantService.List.
+func (c *tenantServiceClient) List(ctx context.Context, req *connect.Request[v1.TenantServiceListRequest]) (*connect.Response[v1.TenantServiceListResponse], error) {
+	return c.list.CallUnary(ctx, req)
 }
 
 // Get calls api.v1.TenantService.Get.
@@ -208,6 +238,11 @@ func (c *tenantServiceClient) Delete(ctx context.Context, req *connect.Request[v
 // RemoveMember calls api.v1.TenantService.RemoveMember.
 func (c *tenantServiceClient) RemoveMember(ctx context.Context, req *connect.Request[v1.TenantServiceRemoveMemberRequest]) (*connect.Response[v1.TenantServiceRemoveMemberResponse], error) {
 	return c.removeMember.CallUnary(ctx, req)
+}
+
+// UpdateMember calls api.v1.TenantService.UpdateMember.
+func (c *tenantServiceClient) UpdateMember(ctx context.Context, req *connect.Request[v1.TenantServiceUpdateMemberRequest]) (*connect.Response[v1.TenantServiceUpdateMemberResponse], error) {
+	return c.updateMember.CallUnary(ctx, req)
 }
 
 // Invite calls api.v1.TenantService.Invite.
@@ -239,17 +274,21 @@ func (c *tenantServiceClient) InviteGet(ctx context.Context, req *connect.Reques
 type TenantServiceHandler interface {
 	// Create a tenant
 	Create(context.Context, *connect.Request[v1.TenantServiceCreateRequest]) (*connect.Response[v1.TenantServiceCreateResponse], error)
+	// List tenants
+	List(context.Context, *connect.Request[v1.TenantServiceListRequest]) (*connect.Response[v1.TenantServiceListResponse], error)
 	// Get a tenant
 	Get(context.Context, *connect.Request[v1.TenantServiceGetRequest]) (*connect.Response[v1.TenantServiceGetResponse], error)
 	// Update a tenant
 	Update(context.Context, *connect.Request[v1.TenantServiceUpdateRequest]) (*connect.Response[v1.TenantServiceUpdateResponse], error)
 	// Delete a tenant
 	Delete(context.Context, *connect.Request[v1.TenantServiceDeleteRequest]) (*connect.Response[v1.TenantServiceDeleteResponse], error)
-	// RemoveMember remove a user from a tenant
+	// RemoveMember remove a member of a tenant
 	RemoveMember(context.Context, *connect.Request[v1.TenantServiceRemoveMemberRequest]) (*connect.Response[v1.TenantServiceRemoveMemberResponse], error)
+	// UpdateMember update a member of a tenant
+	UpdateMember(context.Context, *connect.Request[v1.TenantServiceUpdateMemberRequest]) (*connect.Response[v1.TenantServiceUpdateMemberResponse], error)
 	// Invite a user to a tenant
 	Invite(context.Context, *connect.Request[v1.TenantServiceInviteRequest]) (*connect.Response[v1.TenantServiceInviteResponse], error)
-	// InviteAccept is called from a user to accept a invitation
+	// InviteAccept is called from a user to accept an invitation
 	InviteAccept(context.Context, *connect.Request[v1.TenantServiceInviteAcceptRequest]) (*connect.Response[v1.TenantServiceInviteAcceptResponse], error)
 	// InviteDelete deletes a pending invitation
 	InviteDelete(context.Context, *connect.Request[v1.TenantServiceInviteDeleteRequest]) (*connect.Response[v1.TenantServiceInviteDeleteResponse], error)
@@ -269,6 +308,12 @@ func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOp
 		TenantServiceCreateProcedure,
 		svc.Create,
 		connect.WithSchema(tenantServiceCreateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantServiceListHandler := connect.NewUnaryHandler(
+		TenantServiceListProcedure,
+		svc.List,
+		connect.WithSchema(tenantServiceListMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	tenantServiceGetHandler := connect.NewUnaryHandler(
@@ -293,6 +338,12 @@ func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOp
 		TenantServiceRemoveMemberProcedure,
 		svc.RemoveMember,
 		connect.WithSchema(tenantServiceRemoveMemberMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantServiceUpdateMemberHandler := connect.NewUnaryHandler(
+		TenantServiceUpdateMemberProcedure,
+		svc.UpdateMember,
+		connect.WithSchema(tenantServiceUpdateMemberMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	tenantServiceInviteHandler := connect.NewUnaryHandler(
@@ -329,6 +380,8 @@ func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOp
 		switch r.URL.Path {
 		case TenantServiceCreateProcedure:
 			tenantServiceCreateHandler.ServeHTTP(w, r)
+		case TenantServiceListProcedure:
+			tenantServiceListHandler.ServeHTTP(w, r)
 		case TenantServiceGetProcedure:
 			tenantServiceGetHandler.ServeHTTP(w, r)
 		case TenantServiceUpdateProcedure:
@@ -337,6 +390,8 @@ func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOp
 			tenantServiceDeleteHandler.ServeHTTP(w, r)
 		case TenantServiceRemoveMemberProcedure:
 			tenantServiceRemoveMemberHandler.ServeHTTP(w, r)
+		case TenantServiceUpdateMemberProcedure:
+			tenantServiceUpdateMemberHandler.ServeHTTP(w, r)
 		case TenantServiceInviteProcedure:
 			tenantServiceInviteHandler.ServeHTTP(w, r)
 		case TenantServiceInviteAcceptProcedure:
@@ -360,6 +415,10 @@ func (UnimplementedTenantServiceHandler) Create(context.Context, *connect.Reques
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.TenantService.Create is not implemented"))
 }
 
+func (UnimplementedTenantServiceHandler) List(context.Context, *connect.Request[v1.TenantServiceListRequest]) (*connect.Response[v1.TenantServiceListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.TenantService.List is not implemented"))
+}
+
 func (UnimplementedTenantServiceHandler) Get(context.Context, *connect.Request[v1.TenantServiceGetRequest]) (*connect.Response[v1.TenantServiceGetResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.TenantService.Get is not implemented"))
 }
@@ -374,6 +433,10 @@ func (UnimplementedTenantServiceHandler) Delete(context.Context, *connect.Reques
 
 func (UnimplementedTenantServiceHandler) RemoveMember(context.Context, *connect.Request[v1.TenantServiceRemoveMemberRequest]) (*connect.Response[v1.TenantServiceRemoveMemberResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.TenantService.RemoveMember is not implemented"))
+}
+
+func (UnimplementedTenantServiceHandler) UpdateMember(context.Context, *connect.Request[v1.TenantServiceUpdateMemberRequest]) (*connect.Response[v1.TenantServiceUpdateMemberResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.v1.TenantService.UpdateMember is not implemented"))
 }
 
 func (UnimplementedTenantServiceHandler) Invite(context.Context, *connect.Request[v1.TenantServiceInviteRequest]) (*connect.Response[v1.TenantServiceInviteResponse], error) {

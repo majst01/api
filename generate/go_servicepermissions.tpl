@@ -81,11 +81,6 @@ func GetServicePermissions() *ServicePermissions {
 {{- end }}
 			},
 		},
-		Chargeable: map[string]bool{
-{{- range $key, $value := .Chargeable }}
-	"{{ $key }}": {{ $value }} ,
-{{- end }}
-		},
 		Auditable:  map[string]bool{
 {{- range $key, $value := .Auditable }}
 	"{{ $key }}": {{ $value }} ,
