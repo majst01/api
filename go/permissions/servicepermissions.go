@@ -18,19 +18,73 @@ func GetServices() []string {
 func GetServicePermissions() *ServicePermissions {
 	return &ServicePermissions{
 		Roles: Roles{
-			Admin: &Admin{
-				Editor: []string{},
-				Viewer: []string{},
+			Admin: Admin{
+				"ADMIN_ROLE_EDITOR": []string{
+					"/admin.v1.TenantService/List",
+					"/admin.v1.TokenService/List",
+					"/admin.v1.TokenService/Revoke",
+				},
+				"ADMIN_ROLE_VIEWER": []string{
+					"/admin.v1.TenantService/List",
+					"/admin.v1.TokenService/List",
+					"/admin.v1.TokenService/Revoke",
+				},
 			},
-			Tenant: &Tenant{
-				Owner:  []string{},
-				Editor: []string{},
-				Viewer: []string{},
+			Tenant: Tenant{
+				"TENANT_ROLE_EDITOR": []string{
+					"/api.v1.ProjectService/Create",
+					"/api.v1.TenantService/Get",
+					"/api.v1.TenantService/Update",
+					"/api.v1.TenantService/Delete",
+				},
+				"TENANT_ROLE_GUEST": []string{
+					"/api.v1.TenantService/Get",
+				},
+				"TENANT_ROLE_OWNER": []string{
+					"/api.v1.ProjectService/Create",
+					"/api.v1.TenantService/Get",
+					"/api.v1.TenantService/Update",
+					"/api.v1.TenantService/Delete",
+					"/api.v1.TenantService/RemoveMember",
+					"/api.v1.TenantService/UpdateMember",
+					"/api.v1.TenantService/Invite",
+					"/api.v1.TenantService/InviteDelete",
+					"/api.v1.TenantService/InvitesList",
+				},
+				"TENANT_ROLE_VIEWER": []string{
+					"/api.v1.TenantService/Get",
+				},
 			},
-			Project: &Project{
-				Owner:  []string{},
-				Editor: []string{},
-				Viewer: []string{},
+			Project: Project{
+				"PROJECT_ROLE_EDITOR": []string{
+					"/api.v1.IPService/Get",
+					"/api.v1.IPService/Allocate",
+					"/api.v1.IPService/Update",
+					"/api.v1.IPService/List",
+					"/api.v1.IPService/Delete",
+					"/api.v1.ProjectService/Get",
+					"/api.v1.ProjectService/Update",
+				},
+				"PROJECT_ROLE_OWNER": []string{
+					"/api.v1.IPService/Get",
+					"/api.v1.IPService/Allocate",
+					"/api.v1.IPService/Update",
+					"/api.v1.IPService/List",
+					"/api.v1.IPService/Delete",
+					"/api.v1.ProjectService/Get",
+					"/api.v1.ProjectService/Delete",
+					"/api.v1.ProjectService/Update",
+					"/api.v1.ProjectService/RemoveMember",
+					"/api.v1.ProjectService/UpdateMember",
+					"/api.v1.ProjectService/Invite",
+					"/api.v1.ProjectService/InviteDelete",
+					"/api.v1.ProjectService/InvitesList",
+				},
+				"PROJECT_ROLE_VIEWER": []string{
+					"/api.v1.IPService/Get",
+					"/api.v1.IPService/List",
+					"/api.v1.ProjectService/Get",
+				},
 			},
 		},
 		Methods: map[string]bool{
