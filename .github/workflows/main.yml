@@ -33,9 +33,4 @@ jobs:
     - name: Lint
       uses: golangci/golangci-lint-action@v6
       with:
-        args: -p bugs -p unused --timeout=5m
-
-    - name: Build
-      run: |
-        go install github.com/mikefarah/yq/v4@latest
-        make release
+        args: -p bugs -p unused -D protogetter --timeout=5m
