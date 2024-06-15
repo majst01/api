@@ -11,6 +11,7 @@ func GetServices() []string {
 		"api.v1.ProjectService",
 		"api.v1.TenantService",
 		"api.v1.TokenService",
+		"api.v1.UserService",
 		"api.v1.VersionService",
 	}
 }
@@ -126,6 +127,7 @@ func GetServicePermissions() *ServicePermissions {
 			"/api.v1.TokenService/Create":           true,
 			"/api.v1.TokenService/List":             true,
 			"/api.v1.TokenService/Revoke":           true,
+			"/api.v1.UserService/Get":               true,
 			"/api.v1.VersionService/Get":            true,
 		},
 		Visibility: Visibility{
@@ -149,6 +151,7 @@ func GetServicePermissions() *ServicePermissions {
 				"/api.v1.TokenService/Create":           true,
 				"/api.v1.TokenService/List":             true,
 				"/api.v1.TokenService/Revoke":           true,
+				"/api.v1.UserService/Get":               true,
 			},
 		},
 		Auditable: map[string]bool{
@@ -190,6 +193,7 @@ func GetServicePermissions() *ServicePermissions {
 			"/api.v1.TokenService/Create":           true,
 			"/api.v1.TokenService/List":             true,
 			"/api.v1.TokenService/Revoke":           true,
+			"/api.v1.UserService/Get":               true,
 			"/api.v1.VersionService/Get":            false,
 		},
 	}

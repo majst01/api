@@ -91,6 +91,11 @@ message IPServiceGetRequest {
 
 // IPServiceGetRequest is the request payload for a ip get request
 message IPServiceAllocateRequest {
+  // Network from which the IP should be allocated
+  string network = 1 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 128
+  }];
   // Project of the ip
   string project = 2 [(buf.validate.field).string.uuid = true];
   // Name of the ip
@@ -100,6 +105,8 @@ message IPServiceAllocateRequest {
   }];
   // Description of the ip
   string description = 4 [(buf.validate.field).string = {max_len: 128}];
+  // IP if given try to allocate this ip if still available
+  optional string ip = 5 [(buf.validate.field).string.ip = true];
   // Tags to put onto the ip
   repeated string tags = 8 [(buf.validate.field).repeated.max_items = 100];
   // Static if set to true, this will be a Static ip
@@ -116,6 +123,11 @@ message IPServiceUpdateRequest {
 
 // IPServiceListRequest is the request payload for a ip list request
 message IPServiceListRequest {
+  // Network from where the ips to list
+  optional string network = 1 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 128
+  }];
   // Project of the ips to list
   string project = 2 [(buf.validate.field).string.uuid = true];
 }

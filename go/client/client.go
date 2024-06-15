@@ -33,6 +33,7 @@ type (
 		Project() apiv1connect.ProjectServiceClient
 		Tenant() apiv1connect.TenantServiceClient
 		Token() apiv1connect.TokenServiceClient
+		User() apiv1connect.UserServiceClient
 		Version() apiv1connect.VersionServiceClient
 	}
 
@@ -43,6 +44,7 @@ type (
 		projectservice apiv1connect.ProjectServiceClient
 		tenantservice  apiv1connect.TenantServiceClient
 		tokenservice   apiv1connect.TokenServiceClient
+		userservice    apiv1connect.UserServiceClient
 		versionservice apiv1connect.VersionServiceClient
 	}
 )
@@ -108,6 +110,11 @@ func (c client) Apiv1() Apiv1 {
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
+		userservice: apiv1connect.NewUserServiceClient(
+			c.config.HttpClient(),
+			c.config.BaseURL,
+			compress.WithAll(compress.LevelBalanced),
+		),
 		versionservice: apiv1connect.NewVersionServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
@@ -134,6 +141,9 @@ func (c *apiv1) Tenant() apiv1connect.TenantServiceClient {
 }
 func (c *apiv1) Token() apiv1connect.TokenServiceClient {
 	return c.tokenservice
+}
+func (c *apiv1) User() apiv1connect.UserServiceClient {
+	return c.userservice
 }
 func (c *apiv1) Version() apiv1connect.VersionServiceClient {
 	return c.versionservice
