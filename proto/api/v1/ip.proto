@@ -49,6 +49,16 @@ enum IPType {
   IP_TYPE_STATIC = 2;
 }
 
+// IPAddressFamily defines either IPv4 or IPv6 Addressfamily
+enum IPAddressFamily {
+  // IP_ADDRESS_FAMILY_UNSPECIFIED is not specified
+  IP_ADDRESS_FAMILY_UNSPECIFIED = 0;
+  // IP_ADDRESS_FAMILY_V4 defines a IPv4 address
+  IP_ADDRESS_FAMILY_V4 = 1;
+  // IP_ADDRESS_FAMILY_V6 defines a IPv6 address
+  IP_ADDRESS_FAMILY_V6 = 2;
+}
+
 // IP is a ip address which can be used as loadbalancer addresses
 message IP {
   // Uuid of this ip
@@ -111,6 +121,8 @@ message IPServiceAllocateRequest {
   repeated string tags = 8 [(buf.validate.field).repeated.max_items = 100];
   // Static if set to true, this will be a Static ip
   bool static = 9;
+  // Addressfamily of the IP to allocate, defaults to ipv4
+  optional IPAddressFamily af = 10;
 }
 
 // IPServiceUpdateRequest is the request payload for a ip update request
@@ -130,6 +142,8 @@ message IPServiceListRequest {
   }];
   // Project of the ips to list
   string project = 2 [(buf.validate.field).string.uuid = true];
+  // Addressfamily of the IPs to list, defaults to all addressfamilies
+  optional IPAddressFamily af = 3;
 }
 
 // IPServiceDeleteRequest is the request payload for a ip delete request
