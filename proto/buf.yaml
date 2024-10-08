@@ -4,7 +4,7 @@ deps:
 lint:
   use:
     - COMMENTS
-    - DEFAULT
+    - STANDARD
     - PACKAGE_NO_IMPORT_CYCLE
   except:
     - FIELD_NOT_REQUIRED
