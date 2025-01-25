@@ -138,7 +138,6 @@ func GetServicePermissions() *ServicePermissions {
 				"/grpc.reflection.v1.ServerReflection/ServerReflectionInfo":      true,
 				"/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo": true,
 			},
-			Private: map[string]bool{},
 			Self: map[string]bool{
 				"/api.v1.MethodService/TokenScopedList": true,
 				"/api.v1.ProjectService/InviteAccept":   true,
