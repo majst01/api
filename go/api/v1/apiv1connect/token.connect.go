@@ -41,14 +41,6 @@ const (
 	TokenServiceRevokeProcedure = "/api.v1.TokenService/Revoke"
 )
 
-// These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
-var (
-	tokenServiceServiceDescriptor      = v1.File_api_v1_token_proto.Services().ByName("TokenService")
-	tokenServiceCreateMethodDescriptor = tokenServiceServiceDescriptor.Methods().ByName("Create")
-	tokenServiceListMethodDescriptor   = tokenServiceServiceDescriptor.Methods().ByName("List")
-	tokenServiceRevokeMethodDescriptor = tokenServiceServiceDescriptor.Methods().ByName("Revoke")
-)
-
 // TokenServiceClient is a client for the api.v1.TokenService service.
 type TokenServiceClient interface {
 	// Create a token to authenticate against the platform, the secret will be only visible in the response
@@ -68,23 +60,24 @@ type TokenServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewTokenServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) TokenServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
+	tokenServiceMethods := v1.File_api_v1_token_proto.Services().ByName("TokenService").Methods()
 	return &tokenServiceClient{
 		create: connect.NewClient[v1.TokenServiceCreateRequest, v1.TokenServiceCreateResponse](
 			httpClient,
 			baseURL+TokenServiceCreateProcedure,
-			connect.WithSchema(tokenServiceCreateMethodDescriptor),
+			connect.WithSchema(tokenServiceMethods.ByName("Create")),
 			connect.WithClientOptions(opts...),
 		),
 		list: connect.NewClient[v1.TokenServiceListRequest, v1.TokenServiceListResponse](
 			httpClient,
 			baseURL+TokenServiceListProcedure,
-			connect.WithSchema(tokenServiceListMethodDescriptor),
+			connect.WithSchema(tokenServiceMethods.ByName("List")),
 			connect.WithClientOptions(opts...),
 		),
 		revoke: connect.NewClient[v1.TokenServiceRevokeRequest, v1.TokenServiceRevokeResponse](
 			httpClient,
 			baseURL+TokenServiceRevokeProcedure,
-			connect.WithSchema(tokenServiceRevokeMethodDescriptor),
+			connect.WithSchema(tokenServiceMethods.ByName("Revoke")),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -128,22 +121,23 @@ type TokenServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewTokenServiceHandler(svc TokenServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	tokenServiceMethods := v1.File_api_v1_token_proto.Services().ByName("TokenService").Methods()
 	tokenServiceCreateHandler := connect.NewUnaryHandler(
 		TokenServiceCreateProcedure,
 		svc.Create,
-		connect.WithSchema(tokenServiceCreateMethodDescriptor),
+		connect.WithSchema(tokenServiceMethods.ByName("Create")),
 		connect.WithHandlerOptions(opts...),
 	)
 	tokenServiceListHandler := connect.NewUnaryHandler(
 		TokenServiceListProcedure,
 		svc.List,
-		connect.WithSchema(tokenServiceListMethodDescriptor),
+		connect.WithSchema(tokenServiceMethods.ByName("List")),
 		connect.WithHandlerOptions(opts...),
 	)
 	tokenServiceRevokeHandler := connect.NewUnaryHandler(
 		TokenServiceRevokeProcedure,
 		svc.Revoke,
-		connect.WithSchema(tokenServiceRevokeMethodDescriptor),
+		connect.WithSchema(tokenServiceMethods.ByName("Revoke")),
 		connect.WithHandlerOptions(opts...),
 	)
 	return "/api.v1.TokenService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

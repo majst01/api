@@ -37,12 +37,6 @@ const (
 	TenantServiceListProcedure = "/admin.v1.TenantService/List"
 )
 
-// These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
-var (
-	tenantServiceServiceDescriptor    = v1.File_admin_v1_tenant_proto.Services().ByName("TenantService")
-	tenantServiceListMethodDescriptor = tenantServiceServiceDescriptor.Methods().ByName("List")
-)
-
 // TenantServiceClient is a client for the admin.v1.TenantService service.
 type TenantServiceClient interface {
 	// List tenants
@@ -58,11 +52,12 @@ type TenantServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewTenantServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) TenantServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
+	tenantServiceMethods := v1.File_admin_v1_tenant_proto.Services().ByName("TenantService").Methods()
 	return &tenantServiceClient{
 		list: connect.NewClient[v1.TenantServiceListRequest, v1.TenantServiceListResponse](
 			httpClient,
 			baseURL+TenantServiceListProcedure,
-			connect.WithSchema(tenantServiceListMethodDescriptor),
+			connect.WithSchema(tenantServiceMethods.ByName("List")),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -90,10 +85,11 @@ type TenantServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	tenantServiceMethods := v1.File_admin_v1_tenant_proto.Services().ByName("TenantService").Methods()
 	tenantServiceListHandler := connect.NewUnaryHandler(
 		TenantServiceListProcedure,
 		svc.List,
-		connect.WithSchema(tenantServiceListMethodDescriptor),
+		connect.WithSchema(tenantServiceMethods.ByName("List")),
 		connect.WithHandlerOptions(opts...),
 	)
 	return "/admin.v1.TenantService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
