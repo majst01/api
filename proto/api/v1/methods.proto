@@ -4,6 +4,7 @@ package api.v1;
 
 import "api/v1/common.proto";
 import "api/v1/token.proto";
+import "buf/validate/validate.proto";
 
 // MethodService serves method related functions
 // methods are functions in services
@@ -35,9 +36,9 @@ message MethodServiceTokenScopedListResponse {
   // Permissions a list of methods which can be called
   repeated MethodPermission permissions = 1;
   // ProjectRoles associates a project id with the corresponding role of the token owner
-  map<string, ProjectRole> project_roles = 2;
+  map<string, ProjectRole> project_roles = 3;
   // TenantRoles associates a tenant id with the corresponding role of the token owner
-  map<string, TenantRole> tenant_roles = 3;
+  map<string, TenantRole> tenant_roles = 4;
   // AdminRole defines the admin role of the token owner
-  optional AdminRole admin_role = 4;
+  optional AdminRole admin_role = 5 [(buf.validate.field).enum.defined_only = true];
 }

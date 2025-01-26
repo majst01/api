@@ -87,6 +87,8 @@ message Project {
   string tenant = 4;
   // IsDefaultProject is true if this is the default project of the tenant.
   bool is_default_project = 5;
+  // AvatarUrl of the Project
+  optional string avatar_url = 6;
   // CreatedAt the date when this project was created
   google.protobuf.Timestamp created_at = 10;
   // UpdatedAt the date when this project was updated
@@ -98,7 +100,7 @@ message ProjectMember {
   // Id is the user id of the member
   string id = 1;
   // Role is the role of the member
-  ProjectRole role = 2;
+  ProjectRole role = 2 [(buf.validate.field).enum.defined_only = true];
   // InheritedMembership indicates that this member has implicit permissions on the project through his membership within the tenant.
   // This member does not have direct project membership but gains permissions on this project from the role he has in the tenant.
   // Inherited memberships are not included in member lists for users with guest permission but only for direct tenant members.
@@ -114,7 +116,7 @@ message ProjectInvite {
   // Project is the project id for which this invite was created
   string project = 2;
   // Role is the role in this project the user will get after accepting the invitation
-  ProjectRole role = 3;
+  ProjectRole role = 3 [(buf.validate.field).enum.defined_only = true];
   // Joined is false as long as a user has not accepted the invite
   bool joined = 4;
   // ProjectName is the project name for which this invite was created
@@ -181,6 +183,8 @@ message ProjectServiceCreateRequest {
     min_len: 2
     max_len: 512
   }];
+  // Avatar URL of the project
+  optional string avatar_url = 4;
 }
 
 // ProjectServiceCreateResponse is the response payload of creation of a project
@@ -215,6 +219,8 @@ message ProjectServiceUpdateRequest {
     min_len: 2
     max_len: 512
   }];
+  // Avatar URL of the project
+  optional string avatar_url = 4;
 }
 
 // ProjectServiceUpdateResponse is the response payload to update a project
@@ -229,12 +235,13 @@ message ProjectServiceInviteRequest {
   string project = 1 [(buf.validate.field).string.uuid = true];
 
   // Role of this user in this project
-  ProjectRole role = 3;
+  ProjectRole role = 3 [(buf.validate.field).enum.defined_only = true];
 }
 
 // ProjectServiceInviteRequest is the response payload to a invite member request
 message ProjectServiceInviteResponse {
   // Inviter contains a secret which can be sent to a potential user
+  // can be appended to the invitation endpoint at our cloud console like
   // console.metalstack.cloud/invite/<secret>
   ProjectInvite invite = 1;
 }
@@ -281,7 +288,7 @@ message ProjectServiceUpdateMemberRequest {
   // MemberID is the id of the member to remove from this project
   string member_id = 2;
   // Role is the role in this project the user will get after the update
-  ProjectRole role = 3;
+  ProjectRole role = 3 [(buf.validate.field).enum.defined_only = true];
 }
 
 // ProjectServiceUpdateMemberResponse is the response payload to a update member request
