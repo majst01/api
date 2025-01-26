@@ -130,20 +130,23 @@ message IPServiceUpdateRequest {
   // Project of the ip
   string project = 1 [(buf.validate.field).string.uuid = true];
   // Ip the ip to update
+  // FIXME this does not work as properties of ip are not optional
   IP ip = 2;
 }
 
 // IPServiceListRequest is the request payload for a ip list request
 message IPServiceListRequest {
+  // Ip the ip to list
+  optional string ip = 1;
   // Network from where the ips to list
-  optional string network = 1 [(buf.validate.field).string = {
+  optional string network = 2 [(buf.validate.field).string = {
     min_len: 2
     max_len: 128
   }];
   // Project of the ips to list
-  string project = 2 [(buf.validate.field).string.uuid = true];
+  string project = 3 [(buf.validate.field).string.uuid = true];
   // Addressfamily of the IPs to list, defaults to all addressfamilies
-  optional IPAddressFamily af = 3;
+  optional IPAddressFamily af = 4;
 }
 
 // IPServiceDeleteRequest is the request payload for a ip delete request
