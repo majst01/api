@@ -37,25 +37,27 @@ type (
 		Token  func(m *mock.Mock)
 	}
 	apiv1 struct {
-		healthservice  *apiv1mocks.HealthServiceClient
-		ipservice      *apiv1mocks.IPServiceClient
-		methodservice  *apiv1mocks.MethodServiceClient
-		projectservice *apiv1mocks.ProjectServiceClient
-		tenantservice  *apiv1mocks.TenantServiceClient
-		tokenservice   *apiv1mocks.TokenServiceClient
-		userservice    *apiv1mocks.UserServiceClient
-		versionservice *apiv1mocks.VersionServiceClient
+		healthservice    *apiv1mocks.HealthServiceClient
+		ipservice        *apiv1mocks.IPServiceClient
+		methodservice    *apiv1mocks.MethodServiceClient
+		partitionservice *apiv1mocks.PartitionServiceClient
+		projectservice   *apiv1mocks.ProjectServiceClient
+		tenantservice    *apiv1mocks.TenantServiceClient
+		tokenservice     *apiv1mocks.TokenServiceClient
+		userservice      *apiv1mocks.UserServiceClient
+		versionservice   *apiv1mocks.VersionServiceClient
 	}
 
 	Apiv1MockFns struct {
-		Health  func(m *mock.Mock)
-		IP      func(m *mock.Mock)
-		Method  func(m *mock.Mock)
-		Project func(m *mock.Mock)
-		Tenant  func(m *mock.Mock)
-		Token   func(m *mock.Mock)
-		User    func(m *mock.Mock)
-		Version func(m *mock.Mock)
+		Health    func(m *mock.Mock)
+		IP        func(m *mock.Mock)
+		Method    func(m *mock.Mock)
+		Partition func(m *mock.Mock)
+		Project   func(m *mock.Mock)
+		Tenant    func(m *mock.Mock)
+		Token     func(m *mock.Mock)
+		User      func(m *mock.Mock)
+		Version   func(m *mock.Mock)
 	}
 )
 
@@ -113,14 +115,15 @@ func (w wrapper) Apiv1(fns *Apiv1MockFns) *apiv1 {
 
 func newapiv1(t *testing.T, fns *Apiv1MockFns) *apiv1 {
 	a := &apiv1{
-		healthservice:  apiv1mocks.NewHealthServiceClient(t),
-		ipservice:      apiv1mocks.NewIPServiceClient(t),
-		methodservice:  apiv1mocks.NewMethodServiceClient(t),
-		projectservice: apiv1mocks.NewProjectServiceClient(t),
-		tenantservice:  apiv1mocks.NewTenantServiceClient(t),
-		tokenservice:   apiv1mocks.NewTokenServiceClient(t),
-		userservice:    apiv1mocks.NewUserServiceClient(t),
-		versionservice: apiv1mocks.NewVersionServiceClient(t),
+		healthservice:    apiv1mocks.NewHealthServiceClient(t),
+		ipservice:        apiv1mocks.NewIPServiceClient(t),
+		methodservice:    apiv1mocks.NewMethodServiceClient(t),
+		partitionservice: apiv1mocks.NewPartitionServiceClient(t),
+		projectservice:   apiv1mocks.NewProjectServiceClient(t),
+		tenantservice:    apiv1mocks.NewTenantServiceClient(t),
+		tokenservice:     apiv1mocks.NewTokenServiceClient(t),
+		userservice:      apiv1mocks.NewUserServiceClient(t),
+		versionservice:   apiv1mocks.NewVersionServiceClient(t),
 	}
 
 	if fns != nil {
@@ -132,6 +135,9 @@ func newapiv1(t *testing.T, fns *Apiv1MockFns) *apiv1 {
 		}
 		if fns.Method != nil {
 			fns.Method(&a.methodservice.Mock)
+		}
+		if fns.Partition != nil {
+			fns.Partition(&a.partitionservice.Mock)
 		}
 		if fns.Project != nil {
 			fns.Project(&a.projectservice.Mock)
@@ -162,6 +168,9 @@ func (c *apiv1) IP() apiv1connect.IPServiceClient {
 }
 func (c *apiv1) Method() apiv1connect.MethodServiceClient {
 	return c.methodservice
+}
+func (c *apiv1) Partition() apiv1connect.PartitionServiceClient {
+	return c.partitionservice
 }
 func (c *apiv1) Project() apiv1connect.ProjectServiceClient {
 	return c.projectservice

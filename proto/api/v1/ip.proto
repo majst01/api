@@ -80,7 +80,7 @@ message IP {
   // Project where this ip address belongs to
   string project = 6 [(buf.validate.field).string.uuid = true];
   // Type of this ip
-  IPType type = 7;
+  IPType type = 7 [(buf.validate.field).enum.defined_only = true];
   // Tags on this ip
   repeated string tags = 8 [(buf.validate.field).repeated.max_items = 100];
   // CreatedAt is the date when this ip was created
@@ -120,24 +120,34 @@ message IPServiceAllocateRequest {
   // Tags to put onto the ip
   repeated string tags = 8 [(buf.validate.field).repeated.max_items = 100];
   // Static if set to true, this will be a Static ip
-  bool static = 9;
+  optional IPType type = 9 [(buf.validate.field).enum.defined_only = true];
   // Addressfamily of the IP to allocate, defaults to ipv4
-  optional IPAddressFamily af = 10;
+  optional IPAddressFamily af = 10 [(buf.validate.field).enum.defined_only = true];
 }
 
 // IPServiceUpdateRequest is the request payload for a ip update request
 message IPServiceUpdateRequest {
   // Project of the ip
   string project = 1 [(buf.validate.field).string.uuid = true];
-  // Ip the ip to update
-  // FIXME this does not work as properties of ip are not optional
-  IP ip = 2;
+  // Uuid of this ip
+  string uuid = 2 [(buf.validate.field).string.uuid = true];
+  // Name of this ip
+  optional string name = 3 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 128
+  }];
+  // Description of this ip
+  optional string description = 4 [(buf.validate.field).string = {max_len: 128}];
+  // Type of this ip
+  optional IPType type = 5 [(buf.validate.field).enum.defined_only = true];
+  // Tags on this ip
+  repeated string tags = 6 [(buf.validate.field).repeated.max_items = 100];
 }
 
 // IPServiceListRequest is the request payload for a ip list request
 message IPServiceListRequest {
   // Ip the ip to list
-  optional string ip = 1;
+  optional string ip = 1 [(buf.validate.field).string.ip = true];
   // Network from where the ips to list
   optional string network = 2 [(buf.validate.field).string = {
     min_len: 2
@@ -145,8 +155,10 @@ message IPServiceListRequest {
   }];
   // Project of the ips to list
   string project = 3 [(buf.validate.field).string.uuid = true];
+  // Static if set to true, this will be a Static ip
+  optional IPType type = 9 [(buf.validate.field).enum.defined_only = true];
   // Addressfamily of the IPs to list, defaults to all addressfamilies
-  optional IPAddressFamily af = 4;
+  optional IPAddressFamily af = 4 [(buf.validate.field).enum.defined_only = true];
 }
 
 // IPServiceDeleteRequest is the request payload for a ip delete request

@@ -73,6 +73,26 @@ func (_m *Apiv1) Method() apiv1connect.MethodServiceClient {
 	return r0
 }
 
+// Partition provides a mock function with no fields
+func (_m *Apiv1) Partition() apiv1connect.PartitionServiceClient {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for Partition")
+	}
+
+	var r0 apiv1connect.PartitionServiceClient
+	if rf, ok := ret.Get(0).(func() apiv1connect.PartitionServiceClient); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(apiv1connect.PartitionServiceClient)
+		}
+	}
+
+	return r0
+}
+
 // Project provides a mock function with no fields
 func (_m *Apiv1) Project() apiv1connect.ProjectServiceClient {
 	ret := _m.Called()

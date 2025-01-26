@@ -30,6 +30,7 @@ type (
 		Health() apiv1connect.HealthServiceClient
 		IP() apiv1connect.IPServiceClient
 		Method() apiv1connect.MethodServiceClient
+		Partition() apiv1connect.PartitionServiceClient
 		Project() apiv1connect.ProjectServiceClient
 		Tenant() apiv1connect.TenantServiceClient
 		Token() apiv1connect.TokenServiceClient
@@ -38,14 +39,15 @@ type (
 	}
 
 	apiv1 struct {
-		healthservice  apiv1connect.HealthServiceClient
-		ipservice      apiv1connect.IPServiceClient
-		methodservice  apiv1connect.MethodServiceClient
-		projectservice apiv1connect.ProjectServiceClient
-		tenantservice  apiv1connect.TenantServiceClient
-		tokenservice   apiv1connect.TokenServiceClient
-		userservice    apiv1connect.UserServiceClient
-		versionservice apiv1connect.VersionServiceClient
+		healthservice    apiv1connect.HealthServiceClient
+		ipservice        apiv1connect.IPServiceClient
+		methodservice    apiv1connect.MethodServiceClient
+		partitionservice apiv1connect.PartitionServiceClient
+		projectservice   apiv1connect.ProjectServiceClient
+		tenantservice    apiv1connect.TenantServiceClient
+		tokenservice     apiv1connect.TokenServiceClient
+		userservice      apiv1connect.UserServiceClient
+		versionservice   apiv1connect.VersionServiceClient
 	}
 )
 
@@ -95,6 +97,11 @@ func (c client) Apiv1() Apiv1 {
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
+		partitionservice: apiv1connect.NewPartitionServiceClient(
+			c.config.HttpClient(),
+			c.config.BaseURL,
+			compress.WithAll(compress.LevelBalanced),
+		),
 		projectservice: apiv1connect.NewProjectServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
@@ -132,6 +139,9 @@ func (c *apiv1) IP() apiv1connect.IPServiceClient {
 }
 func (c *apiv1) Method() apiv1connect.MethodServiceClient {
 	return c.methodservice
+}
+func (c *apiv1) Partition() apiv1connect.PartitionServiceClient {
+	return c.partitionservice
 }
 func (c *apiv1) Project() apiv1connect.ProjectServiceClient {
 	return c.projectservice
