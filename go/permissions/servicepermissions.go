@@ -29,7 +29,6 @@ func GetServicePermissions() *ServicePermissions {
 				"ADMIN_ROLE_VIEWER": []string{
 					"/admin.v1.TenantService/List",
 					"/admin.v1.TokenService/List",
-					"/admin.v1.TokenService/Revoke",
 				},
 			},
 			Tenant: Tenant{
