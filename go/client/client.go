@@ -17,13 +17,15 @@ type (
 		config DialConfig
 	}
 	Adminv1 interface {
+		Partition() adminv1connect.PartitionServiceClient
 		Tenant() adminv1connect.TenantServiceClient
 		Token() adminv1connect.TokenServiceClient
 	}
 
 	adminv1 struct {
-		tenantservice adminv1connect.TenantServiceClient
-		tokenservice  adminv1connect.TokenServiceClient
+		partitionservice adminv1connect.PartitionServiceClient
+		tenantservice    adminv1connect.TenantServiceClient
+		tokenservice     adminv1connect.TokenServiceClient
 	}
 
 	Apiv1 interface {
@@ -59,6 +61,11 @@ func New(config DialConfig) Client {
 
 func (c client) Adminv1() Adminv1 {
 	a := &adminv1{
+		partitionservice: adminv1connect.NewPartitionServiceClient(
+			c.config.HttpClient(),
+			c.config.BaseURL,
+			compress.WithAll(compress.LevelBalanced),
+		),
 		tenantservice: adminv1connect.NewTenantServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
@@ -73,6 +80,9 @@ func (c client) Adminv1() Adminv1 {
 	return a
 }
 
+func (c *adminv1) Partition() adminv1connect.PartitionServiceClient {
+	return c.partitionservice
+}
 func (c *adminv1) Tenant() adminv1connect.TenantServiceClient {
 	return c.tenantservice
 }

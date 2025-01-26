@@ -25,7 +25,7 @@ service PartitionService {
   }
 }
 
-// IP is a partition address which can be used as loadbalancer addresses
+// Partition is a failure domain with machines and switches
 message Partition {
   // ID of this partition
   string id = 1 [(buf.validate.field).string = {

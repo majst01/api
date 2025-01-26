@@ -3,6 +3,7 @@ package permissions
 
 func GetServices() []string {
 	return []string{
+		"admin.v1.PartitionService",
 		"admin.v1.TenantService",
 		"admin.v1.TokenService",
 		"api.v1.HealthService",
@@ -22,6 +23,9 @@ func GetServicePermissions() *ServicePermissions {
 		Roles: Roles{
 			Admin: Admin{
 				"ADMIN_ROLE_EDITOR": []string{
+					"/admin.v1.PartitionService/Create",
+					"/admin.v1.PartitionService/Update",
+					"/admin.v1.PartitionService/Delete",
 					"/admin.v1.TenantService/List",
 					"/admin.v1.TokenService/List",
 					"/admin.v1.TokenService/Revoke",
@@ -89,6 +93,9 @@ func GetServicePermissions() *ServicePermissions {
 			},
 		},
 		Methods: map[string]bool{
+			"/admin.v1.PartitionService/Create":     true,
+			"/admin.v1.PartitionService/Delete":     true,
+			"/admin.v1.PartitionService/Update":     true,
 			"/admin.v1.TenantService/List":          true,
 			"/admin.v1.TokenService/List":           true,
 			"/admin.v1.TokenService/Revoke":         true,
@@ -164,6 +171,9 @@ func GetServicePermissions() *ServicePermissions {
 			},
 		},
 		Auditable: map[string]bool{
+			"/admin.v1.PartitionService/Create":     true,
+			"/admin.v1.PartitionService/Delete":     true,
+			"/admin.v1.PartitionService/Update":     true,
 			"/admin.v1.TenantService/List":          true,
 			"/admin.v1.TokenService/List":           true,
 			"/admin.v1.TokenService/Revoke":         true,

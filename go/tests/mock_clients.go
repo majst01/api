@@ -28,13 +28,15 @@ type (
 		t *testing.T
 	}
 	adminv1 struct {
-		tenantservice *adminv1mocks.TenantServiceClient
-		tokenservice  *adminv1mocks.TokenServiceClient
+		partitionservice *adminv1mocks.PartitionServiceClient
+		tenantservice    *adminv1mocks.TenantServiceClient
+		tokenservice     *adminv1mocks.TokenServiceClient
 	}
 
 	Adminv1MockFns struct {
-		Tenant func(m *mock.Mock)
-		Token  func(m *mock.Mock)
+		Partition func(m *mock.Mock)
+		Tenant    func(m *mock.Mock)
+		Token     func(m *mock.Mock)
 	}
 	apiv1 struct {
 		healthservice    *apiv1mocks.HealthServiceClient
@@ -85,11 +87,15 @@ func (w wrapper) Adminv1(fns *Adminv1MockFns) *adminv1 {
 
 func newadminv1(t *testing.T, fns *Adminv1MockFns) *adminv1 {
 	a := &adminv1{
-		tenantservice: adminv1mocks.NewTenantServiceClient(t),
-		tokenservice:  adminv1mocks.NewTokenServiceClient(t),
+		partitionservice: adminv1mocks.NewPartitionServiceClient(t),
+		tenantservice:    adminv1mocks.NewTenantServiceClient(t),
+		tokenservice:     adminv1mocks.NewTokenServiceClient(t),
 	}
 
 	if fns != nil {
+		if fns.Partition != nil {
+			fns.Partition(&a.partitionservice.Mock)
+		}
 		if fns.Tenant != nil {
 			fns.Tenant(&a.tenantservice.Mock)
 		}
@@ -102,6 +108,9 @@ func newadminv1(t *testing.T, fns *Adminv1MockFns) *adminv1 {
 	return a
 }
 
+func (c *adminv1) Partition() adminv1connect.PartitionServiceClient {
+	return c.partitionservice
+}
 func (c *adminv1) Tenant() adminv1connect.TenantServiceClient {
 	return c.tenantservice
 }

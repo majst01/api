@@ -23,7 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// IP is a partition address which can be used as loadbalancer addresses
+// Partition is a failure domain with machines and switches
 type Partition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of this partition
