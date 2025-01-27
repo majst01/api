@@ -13,6 +13,26 @@ type Adminv1 struct {
 	mock.Mock
 }
 
+// Partition provides a mock function with no fields
+func (_m *Adminv1) Partition() adminv1connect.PartitionServiceClient {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for Partition")
+	}
+
+	var r0 adminv1connect.PartitionServiceClient
+	if rf, ok := ret.Get(0).(func() adminv1connect.PartitionServiceClient); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(adminv1connect.PartitionServiceClient)
+		}
+	}
+
+	return r0
+}
+
 // Tenant provides a mock function with no fields
 func (_m *Adminv1) Tenant() adminv1connect.TenantServiceClient {
 	ret := _m.Called()

@@ -93,8 +93,8 @@ message IP {
 
 // IPServiceGetRequest is the request payload for a ip get request
 message IPServiceGetRequest {
-  // Uuid of the ip to get
-  string uuid = 1 [(buf.validate.field).string.uuid = true];
+  // IP of the ip to get
+  string ip = 1 [(buf.validate.field).string.ip = true];
   // Project of the ip
   string project = 2 [(buf.validate.field).string.uuid = true];
 }
@@ -127,10 +127,10 @@ message IPServiceAllocateRequest {
 
 // IPServiceUpdateRequest is the request payload for a ip update request
 message IPServiceUpdateRequest {
+  // Ip the ip to update
+  string ip = 1 [(buf.validate.field).string.ip = true];
   // Project of the ip
-  string project = 1 [(buf.validate.field).string.uuid = true];
-  // Uuid of this ip
-  string uuid = 2 [(buf.validate.field).string.uuid = true];
+  string project = 2 [(buf.validate.field).string.uuid = true];
   // Name of this ip
   optional string name = 3 [(buf.validate.field).string = {
     min_len: 2
@@ -163,8 +163,8 @@ message IPServiceListRequest {
 
 // IPServiceDeleteRequest is the request payload for a ip delete request
 message IPServiceDeleteRequest {
-  // Uuid of the ip to delete
-  string uuid = 1 [(buf.validate.field).string.uuid = true];
+  // IP of the ip to delete
+  string ip = 1 [(buf.validate.field).string.ip = true];
   // Project of the ip
   string project = 2 [(buf.validate.field).string.uuid = true];
 }
