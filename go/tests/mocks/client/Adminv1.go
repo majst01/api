@@ -3,7 +3,7 @@
 package client
 
 import (
-	adminv1connect "github.com/metal-stack/api/go/admin/v1/adminv1connect"
+	adminv1connect "github.com/metal-stack/api/go/metalstack/admin/v1/adminv1connect"
 
 	mock "github.com/stretchr/testify/mock"
 )

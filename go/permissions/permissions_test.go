@@ -10,6 +10,6 @@ func TestGetServicePermissions(t *testing.T) {
 	perms := GetServicePermissions()
 	require.NotNil(t, perms)
 	// TODO more coverage
-	require.Contains(t, perms.Methods, "/api.v1.IPService/List")
-	require.Contains(t, perms.Visibility.Self, "/api.v1.TokenService/Create")
+	require.Contains(t, perms.Methods, "/metalstack.api.v1.IPService/List")
+	require.Contains(t, perms.Visibility.Self, "/metalstack.api.v1.TokenService/Create")
 }

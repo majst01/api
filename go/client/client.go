@@ -4,8 +4,8 @@ package client
 import (
 	compress "github.com/klauspost/connect-compress/v2"
 
-	"github.com/metal-stack/api/go/admin/v1/adminv1connect"
-	"github.com/metal-stack/api/go/api/v1/apiv1connect"
+	"github.com/metal-stack/api/go/metalstack/admin/v1/adminv1connect"
+	"github.com/metal-stack/api/go/metalstack/api/v1/apiv1connect"
 )
 
 type (

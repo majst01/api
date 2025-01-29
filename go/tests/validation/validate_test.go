@@ -3,7 +3,7 @@ package validation
 import (
 	"testing"
 
-	apiv1 "github.com/metal-stack/api/go/api/v1"
+	apiv1 "github.com/metal-stack/api/go/metalstack/api/v1"
 
 	"github.com/bufbuild/protovalidate-go"
 	"github.com/stretchr/testify/require"

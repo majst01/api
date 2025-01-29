@@ -4,11 +4,11 @@ package apitests
 import (
 	"testing"
 
-	"github.com/metal-stack/api/go/admin/v1/adminv1connect"
-	"github.com/metal-stack/api/go/api/v1/apiv1connect"
 	apiclient "github.com/metal-stack/api/go/client"
-	adminv1mocks "github.com/metal-stack/api/go/tests/mocks/admin/v1/adminv1connect"
-	apiv1mocks "github.com/metal-stack/api/go/tests/mocks/api/v1/apiv1connect"
+	"github.com/metal-stack/api/go/metalstack/admin/v1/adminv1connect"
+	"github.com/metal-stack/api/go/metalstack/api/v1/apiv1connect"
+	adminv1mocks "github.com/metal-stack/api/go/tests/mocks/metalstack/admin/v1/adminv1connect"
+	apiv1mocks "github.com/metal-stack/api/go/tests/mocks/metalstack/api/v1/apiv1connect"
 
 	"github.com/stretchr/testify/mock"
 )

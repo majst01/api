@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package api.v1;
+package metalstack.api.v1;
 
-import "api/v1/common.proto";
+import "metalstack/api/v1/common.proto";
 
 service WrongProjectService {
   rpc Get(WrongProjectServiceGetRequest) returns (WrongProjectServiceGetResponse) {
@@ -16,7 +16,7 @@ service WrongProjectService {
   }
   rpc Delete(WrongProjectServiceUpdateRequest) returns (WrongProjectServiceUpdateResponse) {
     option (admin_roles) = ADMIN_ROLE_VIEWER;
-    option (api.v1.visibility) = VISIBILITY_PUBLIC;
+    option (metalstack.api.v1.visibility) = VISIBILITY_PUBLIC;
   }
   rpc Charge(WrongProjectServiceUpdateRequest) returns (WrongProjectServiceUpdateResponse) {
     option (chargeable) = CHARGEABLE_TRUE;

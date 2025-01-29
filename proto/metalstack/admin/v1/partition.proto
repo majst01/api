@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package metalstack.admin.v1;
+
+import "buf/validate/validate.proto";
+import "metalstack/api/v1/common.proto";
+import "metalstack/api/v1/partition.proto";
+
+// PartitionService serves partition address related functions
+service PartitionService {
+  // Create a partition
+  rpc Create(PartitionServiceCreateRequest) returns (PartitionServiceCreateResponse) {
+    option (metalstack.api.v1.admin_roles) = ADMIN_ROLE_EDITOR;
+  }
+  // Update a partition
+  rpc Update(PartitionServiceUpdateRequest) returns (PartitionServiceUpdateResponse) {
+    option (metalstack.api.v1.admin_roles) = ADMIN_ROLE_EDITOR;
+  }
+  // Delete a partition
+  rpc Delete(PartitionServiceDeleteRequest) returns (PartitionServiceDeleteResponse) {
+    option (metalstack.api.v1.admin_roles) = ADMIN_ROLE_EDITOR;
+  }
+}
+
+// PartitionServiceCreateRequest is the request payload for a partition create request
+message PartitionServiceCreateRequest {
+  // Partition the partition
+  metalstack.api.v1.Partition partition = 1;
+}
+
+// PartitionServiceUpdateRequest is the request payload for a partition update request
+message PartitionServiceUpdateRequest {
+  // ID of the partition to get
+  string id = 1 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 128
+  }];
+  // PartitionBootConfiguration defines how metal-hammer boots
+  metalstack.api.v1.PartitionBootConfiguration boot_configuration = 5;
+  // DNSServers for this partition
+  repeated metalstack.api.v1.DNSServer dns_server = 6 [(buf.validate.field).repeated.max_items = 3];
+  // NTPServers for this partition
+  repeated metalstack.api.v1.NTPServer ntp_server = 7 [(buf.validate.field).repeated.max_items = 10];
+  // Tags on this partition
+  repeated string tags = 8 [(buf.validate.field).repeated.max_items = 100];
+}
+
+// PartitionServiceDeleteRequest is the request payload for a partition delete request
+message PartitionServiceDeleteRequest {
+  // ID of the partition to get
+  string id = 1 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 128
+  }];
+}
+
+// PartitionServiceCreateResponse is the response payload for a partition create request
+message PartitionServiceCreateResponse {
+  // Partition the partition
+  metalstack.api.v1.Partition partition = 1;
+}
+
+// PartitionServiceUpdateResponse is the response payload for a partition update request
+message PartitionServiceUpdateResponse {
+  // Partition the partition
+  metalstack.api.v1.Partition partition = 1;
+}
+
+// PartitionServiceCapacityResponse is the response payload for a partition delete request
+message PartitionServiceDeleteResponse {
+  // Partition the partition
+  metalstack.api.v1.Partition partition = 1;
+}

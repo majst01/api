@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	sprig "github.com/go-task/slim-sprig/v3"
-	v1 "github.com/metal-stack/api/go/api/v1"
+	v1 "github.com/metal-stack/api/go/metalstack/api/v1"
 	"github.com/metal-stack/api/go/permissions"
 	"github.com/metal-stack/api/go/tests/protoparser"
 
@@ -224,18 +224,20 @@ func svcs(root string) (map[string]api, error) {
 		if err != nil {
 			return nil, err
 		}
-		n := strings.ReplaceAll(*fd.Package, ".", "")
-		a, ok := result[n]
+		_, name, _ := strings.Cut(*fd.Package, "metalstack.")
+		name = strings.ReplaceAll(name, ".", "")
+		fmt.Printf("package:%s name:%s\n", *fd.Package, name)
+		a, ok := result[name]
 		if !ok {
 			a = api{
-				Name: n,
+				Name: name,
 				Path: path.Dir(strings.TrimPrefix(filename, root)),
 			}
 		}
 		for _, serviceDesc := range fd.GetService() {
 			a.Services = append(a.Services, *serviceDesc.Name)
 		}
-		result[n] = a
+		result[name] = a
 	}
 
 	return result, nil

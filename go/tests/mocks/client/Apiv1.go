@@ -3,7 +3,7 @@
 package client
 
 import (
-	apiv1connect "github.com/metal-stack/api/go/api/v1/apiv1connect"
+	apiv1connect "github.com/metal-stack/api/go/metalstack/api/v1/apiv1connect"
 
 	mock "github.com/stretchr/testify/mock"
 )

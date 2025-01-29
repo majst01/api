@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	v1 "github.com/metal-stack/api/go/api/v1"
+	v1 "github.com/metal-stack/api/go/metalstack/api/v1"
 	"github.com/metal-stack/api/go/tests/protoparser"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -100,11 +100,11 @@ func Test_APIScopes(t *testing.T) {
 	err = validateProto("./testproto")
 
 	errs := errors.Join(
-		errors.New("api service method: \"/api.v1.WrongProjectService/Get\" has apiv1.ProjectRole but request payload \"WrongProjectServiceGetRequest\" does not have a project field"),
-		errors.New("api service method: \"/api.v1.WrongProjectService/List\" has no scope defined. one scope needs to be defined though. use one of the following scopes: [apiv1.AdminRole apiv1.ProjectRole apiv1.TenantRole apiv1.Visibility]"),
-		errors.New("api service method: \"/api.v1.WrongProjectService/Update\" can not have apiv1.AdminRole ([ADMIN_ROLE_VIEWER]) and apiv1.ProjectRole ([PROJECT_ROLE_OWNER]) at the same time. only one scope is allowed."),
-		errors.New("api service method: \"/api.v1.WrongProjectService/Delete\" can not have apiv1.AdminRole ([ADMIN_ROLE_VIEWER]) and apiv1.Visibility ([VISIBILITY_PUBLIC]) at the same time. only one scope is allowed."),
-		errors.New("api service method: \"/api.v1.WrongProjectService/Charge\" has no scope defined. one scope needs to be defined though. use one of the following scopes: [apiv1.AdminRole apiv1.ProjectRole apiv1.TenantRole apiv1.Visibility]"),
+		errors.New("api service method: \"/metalstack.api.v1.WrongProjectService/Get\" has apiv1.ProjectRole but request payload \"WrongProjectServiceGetRequest\" does not have a project field"),
+		errors.New("api service method: \"/metalstack.api.v1.WrongProjectService/List\" has no scope defined. one scope needs to be defined though. use one of the following scopes: [apiv1.AdminRole apiv1.ProjectRole apiv1.TenantRole apiv1.Visibility]"),
+		errors.New("api service method: \"/metalstack.api.v1.WrongProjectService/Update\" can not have apiv1.AdminRole ([ADMIN_ROLE_VIEWER]) and apiv1.ProjectRole ([PROJECT_ROLE_OWNER]) at the same time. only one scope is allowed."),
+		errors.New("api service method: \"/metalstack.api.v1.WrongProjectService/Delete\" can not have apiv1.AdminRole ([ADMIN_ROLE_VIEWER]) and apiv1.Visibility ([VISIBILITY_PUBLIC]) at the same time. only one scope is allowed."),
+		errors.New("api service method: \"/metalstack.api.v1.WrongProjectService/Charge\" has no scope defined. one scope needs to be defined though. use one of the following scopes: [apiv1.AdminRole apiv1.ProjectRole apiv1.TenantRole apiv1.Visibility]"),
 	)
 
 	require.Equal(t, err, errs)
