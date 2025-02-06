@@ -5,52 +5,52 @@ import (
 	"testing"
 
 	apiclient "github.com/metal-stack/api/go/client"
-	"github.com/metal-stack/api/go/metalstack/admin/v1/adminv1connect"
-	"github.com/metal-stack/api/go/metalstack/api/v1/apiv1connect"
-	adminv1mocks "github.com/metal-stack/api/go/tests/mocks/metalstack/admin/v1/adminv1connect"
-	apiv1mocks "github.com/metal-stack/api/go/tests/mocks/metalstack/api/v1/apiv1connect"
+	"github.com/metal-stack/api/go/metalstack/admin/v2/adminv2connect"
+	"github.com/metal-stack/api/go/metalstack/api/v2/apiv2connect"
+	adminv2mocks "github.com/metal-stack/api/go/tests/mocks/metalstack/admin/v2/adminv2connect"
+	apiv2mocks "github.com/metal-stack/api/go/tests/mocks/metalstack/api/v2/apiv2connect"
 
 	"github.com/stretchr/testify/mock"
 )
 
 type (
 	client struct {
-		adminv1service *adminv1
-		apiv1service   *apiv1
+		adminv2service *adminv2
+		apiv2service   *apiv2
 	}
 
 	ClientMockFns struct {
-		Adminv1Mocks *Adminv1MockFns
-		Apiv1Mocks   *Apiv1MockFns
+		Adminv2Mocks *Adminv2MockFns
+		Apiv2Mocks   *Apiv2MockFns
 	}
 
 	wrapper struct {
 		t *testing.T
 	}
-	adminv1 struct {
-		partitionservice *adminv1mocks.PartitionServiceClient
-		tenantservice    *adminv1mocks.TenantServiceClient
-		tokenservice     *adminv1mocks.TokenServiceClient
+	adminv2 struct {
+		partitionservice *adminv2mocks.PartitionServiceClient
+		tenantservice    *adminv2mocks.TenantServiceClient
+		tokenservice     *adminv2mocks.TokenServiceClient
 	}
 
-	Adminv1MockFns struct {
+	Adminv2MockFns struct {
 		Partition func(m *mock.Mock)
 		Tenant    func(m *mock.Mock)
 		Token     func(m *mock.Mock)
 	}
-	apiv1 struct {
-		healthservice    *apiv1mocks.HealthServiceClient
-		ipservice        *apiv1mocks.IPServiceClient
-		methodservice    *apiv1mocks.MethodServiceClient
-		partitionservice *apiv1mocks.PartitionServiceClient
-		projectservice   *apiv1mocks.ProjectServiceClient
-		tenantservice    *apiv1mocks.TenantServiceClient
-		tokenservice     *apiv1mocks.TokenServiceClient
-		userservice      *apiv1mocks.UserServiceClient
-		versionservice   *apiv1mocks.VersionServiceClient
+	apiv2 struct {
+		healthservice    *apiv2mocks.HealthServiceClient
+		ipservice        *apiv2mocks.IPServiceClient
+		methodservice    *apiv2mocks.MethodServiceClient
+		partitionservice *apiv2mocks.PartitionServiceClient
+		projectservice   *apiv2mocks.ProjectServiceClient
+		tenantservice    *apiv2mocks.TenantServiceClient
+		tokenservice     *apiv2mocks.TokenServiceClient
+		userservice      *apiv2mocks.UserServiceClient
+		versionservice   *apiv2mocks.VersionServiceClient
 	}
 
-	Apiv1MockFns struct {
+	Apiv2MockFns struct {
 		Health    func(m *mock.Mock)
 		IP        func(m *mock.Mock)
 		Method    func(m *mock.Mock)
@@ -69,27 +69,27 @@ func New(t *testing.T) *wrapper {
 
 func (w wrapper) Client(fns *ClientMockFns) *client {
 	return &client{
-		adminv1service: w.Adminv1(fns.Adminv1Mocks),
-		apiv1service:   w.Apiv1(fns.Apiv1Mocks),
+		adminv2service: w.Adminv2(fns.Adminv2Mocks),
+		apiv2service:   w.Apiv2(fns.Apiv2Mocks),
 	}
 }
 
-func (c *client) Adminv1() apiclient.Adminv1 {
-	return c.adminv1service
+func (c *client) Adminv2() apiclient.Adminv2 {
+	return c.adminv2service
 }
-func (c *client) Apiv1() apiclient.Apiv1 {
-	return c.apiv1service
-}
-
-func (w wrapper) Adminv1(fns *Adminv1MockFns) *adminv1 {
-	return newadminv1(w.t, fns)
+func (c *client) Apiv2() apiclient.Apiv2 {
+	return c.apiv2service
 }
 
-func newadminv1(t *testing.T, fns *Adminv1MockFns) *adminv1 {
-	a := &adminv1{
-		partitionservice: adminv1mocks.NewPartitionServiceClient(t),
-		tenantservice:    adminv1mocks.NewTenantServiceClient(t),
-		tokenservice:     adminv1mocks.NewTokenServiceClient(t),
+func (w wrapper) Adminv2(fns *Adminv2MockFns) *adminv2 {
+	return newadminv2(w.t, fns)
+}
+
+func newadminv2(t *testing.T, fns *Adminv2MockFns) *adminv2 {
+	a := &adminv2{
+		partitionservice: adminv2mocks.NewPartitionServiceClient(t),
+		tenantservice:    adminv2mocks.NewTenantServiceClient(t),
+		tokenservice:     adminv2mocks.NewTokenServiceClient(t),
 	}
 
 	if fns != nil {
@@ -108,31 +108,31 @@ func newadminv1(t *testing.T, fns *Adminv1MockFns) *adminv1 {
 	return a
 }
 
-func (c *adminv1) Partition() adminv1connect.PartitionServiceClient {
+func (c *adminv2) Partition() adminv2connect.PartitionServiceClient {
 	return c.partitionservice
 }
-func (c *adminv1) Tenant() adminv1connect.TenantServiceClient {
+func (c *adminv2) Tenant() adminv2connect.TenantServiceClient {
 	return c.tenantservice
 }
-func (c *adminv1) Token() adminv1connect.TokenServiceClient {
+func (c *adminv2) Token() adminv2connect.TokenServiceClient {
 	return c.tokenservice
 }
 
-func (w wrapper) Apiv1(fns *Apiv1MockFns) *apiv1 {
-	return newapiv1(w.t, fns)
+func (w wrapper) Apiv2(fns *Apiv2MockFns) *apiv2 {
+	return newapiv2(w.t, fns)
 }
 
-func newapiv1(t *testing.T, fns *Apiv1MockFns) *apiv1 {
-	a := &apiv1{
-		healthservice:    apiv1mocks.NewHealthServiceClient(t),
-		ipservice:        apiv1mocks.NewIPServiceClient(t),
-		methodservice:    apiv1mocks.NewMethodServiceClient(t),
-		partitionservice: apiv1mocks.NewPartitionServiceClient(t),
-		projectservice:   apiv1mocks.NewProjectServiceClient(t),
-		tenantservice:    apiv1mocks.NewTenantServiceClient(t),
-		tokenservice:     apiv1mocks.NewTokenServiceClient(t),
-		userservice:      apiv1mocks.NewUserServiceClient(t),
-		versionservice:   apiv1mocks.NewVersionServiceClient(t),
+func newapiv2(t *testing.T, fns *Apiv2MockFns) *apiv2 {
+	a := &apiv2{
+		healthservice:    apiv2mocks.NewHealthServiceClient(t),
+		ipservice:        apiv2mocks.NewIPServiceClient(t),
+		methodservice:    apiv2mocks.NewMethodServiceClient(t),
+		partitionservice: apiv2mocks.NewPartitionServiceClient(t),
+		projectservice:   apiv2mocks.NewProjectServiceClient(t),
+		tenantservice:    apiv2mocks.NewTenantServiceClient(t),
+		tokenservice:     apiv2mocks.NewTokenServiceClient(t),
+		userservice:      apiv2mocks.NewUserServiceClient(t),
+		versionservice:   apiv2mocks.NewVersionServiceClient(t),
 	}
 
 	if fns != nil {
@@ -169,30 +169,30 @@ func newapiv1(t *testing.T, fns *Apiv1MockFns) *apiv1 {
 	return a
 }
 
-func (c *apiv1) Health() apiv1connect.HealthServiceClient {
+func (c *apiv2) Health() apiv2connect.HealthServiceClient {
 	return c.healthservice
 }
-func (c *apiv1) IP() apiv1connect.IPServiceClient {
+func (c *apiv2) IP() apiv2connect.IPServiceClient {
 	return c.ipservice
 }
-func (c *apiv1) Method() apiv1connect.MethodServiceClient {
+func (c *apiv2) Method() apiv2connect.MethodServiceClient {
 	return c.methodservice
 }
-func (c *apiv1) Partition() apiv1connect.PartitionServiceClient {
+func (c *apiv2) Partition() apiv2connect.PartitionServiceClient {
 	return c.partitionservice
 }
-func (c *apiv1) Project() apiv1connect.ProjectServiceClient {
+func (c *apiv2) Project() apiv2connect.ProjectServiceClient {
 	return c.projectservice
 }
-func (c *apiv1) Tenant() apiv1connect.TenantServiceClient {
+func (c *apiv2) Tenant() apiv2connect.TenantServiceClient {
 	return c.tenantservice
 }
-func (c *apiv1) Token() apiv1connect.TokenServiceClient {
+func (c *apiv2) Token() apiv2connect.TokenServiceClient {
 	return c.tokenservice
 }
-func (c *apiv1) User() apiv1connect.UserServiceClient {
+func (c *apiv2) User() apiv2connect.UserServiceClient {
 	return c.userservice
 }
-func (c *apiv1) Version() apiv1connect.VersionServiceClient {
+func (c *apiv2) Version() apiv2connect.VersionServiceClient {
 	return c.versionservice
 }

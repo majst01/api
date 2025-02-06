@@ -12,40 +12,40 @@ type Client struct {
 	mock.Mock
 }
 
-// Adminv1 provides a mock function with no fields
-func (_m *Client) Adminv1() goclient.Adminv1 {
+// Adminv2 provides a mock function with no fields
+func (_m *Client) Adminv2() goclient.Adminv2 {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for Adminv1")
+		panic("no return value specified for Adminv2")
 	}
 
-	var r0 goclient.Adminv1
-	if rf, ok := ret.Get(0).(func() goclient.Adminv1); ok {
+	var r0 goclient.Adminv2
+	if rf, ok := ret.Get(0).(func() goclient.Adminv2); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(goclient.Adminv1)
+			r0 = ret.Get(0).(goclient.Adminv2)
 		}
 	}
 
 	return r0
 }
 
-// Apiv1 provides a mock function with no fields
-func (_m *Client) Apiv1() goclient.Apiv1 {
+// Apiv2 provides a mock function with no fields
+func (_m *Client) Apiv2() goclient.Apiv2 {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for Apiv1")
+		panic("no return value specified for Apiv2")
 	}
 
-	var r0 goclient.Apiv1
-	if rf, ok := ret.Get(0).(func() goclient.Apiv1); ok {
+	var r0 goclient.Apiv2
+	if rf, ok := ret.Get(0).(func() goclient.Apiv2); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(goclient.Apiv1)
+			r0 = ret.Get(0).(goclient.Apiv2)
 		}
 	}
 

@@ -4,52 +4,52 @@ package client
 import (
 	compress "github.com/klauspost/connect-compress/v2"
 
-	"github.com/metal-stack/api/go/metalstack/admin/v1/adminv1connect"
-	"github.com/metal-stack/api/go/metalstack/api/v1/apiv1connect"
+	"github.com/metal-stack/api/go/metalstack/admin/v2/adminv2connect"
+	"github.com/metal-stack/api/go/metalstack/api/v2/apiv2connect"
 )
 
 type (
 	Client interface {
-		Adminv1() Adminv1
-		Apiv1() Apiv1
+		Adminv2() Adminv2
+		Apiv2() Apiv2
 	}
 	client struct {
 		config DialConfig
 	}
-	Adminv1 interface {
-		Partition() adminv1connect.PartitionServiceClient
-		Tenant() adminv1connect.TenantServiceClient
-		Token() adminv1connect.TokenServiceClient
+	Adminv2 interface {
+		Partition() adminv2connect.PartitionServiceClient
+		Tenant() adminv2connect.TenantServiceClient
+		Token() adminv2connect.TokenServiceClient
 	}
 
-	adminv1 struct {
-		partitionservice adminv1connect.PartitionServiceClient
-		tenantservice    adminv1connect.TenantServiceClient
-		tokenservice     adminv1connect.TokenServiceClient
+	adminv2 struct {
+		partitionservice adminv2connect.PartitionServiceClient
+		tenantservice    adminv2connect.TenantServiceClient
+		tokenservice     adminv2connect.TokenServiceClient
 	}
 
-	Apiv1 interface {
-		Health() apiv1connect.HealthServiceClient
-		IP() apiv1connect.IPServiceClient
-		Method() apiv1connect.MethodServiceClient
-		Partition() apiv1connect.PartitionServiceClient
-		Project() apiv1connect.ProjectServiceClient
-		Tenant() apiv1connect.TenantServiceClient
-		Token() apiv1connect.TokenServiceClient
-		User() apiv1connect.UserServiceClient
-		Version() apiv1connect.VersionServiceClient
+	Apiv2 interface {
+		Health() apiv2connect.HealthServiceClient
+		IP() apiv2connect.IPServiceClient
+		Method() apiv2connect.MethodServiceClient
+		Partition() apiv2connect.PartitionServiceClient
+		Project() apiv2connect.ProjectServiceClient
+		Tenant() apiv2connect.TenantServiceClient
+		Token() apiv2connect.TokenServiceClient
+		User() apiv2connect.UserServiceClient
+		Version() apiv2connect.VersionServiceClient
 	}
 
-	apiv1 struct {
-		healthservice    apiv1connect.HealthServiceClient
-		ipservice        apiv1connect.IPServiceClient
-		methodservice    apiv1connect.MethodServiceClient
-		partitionservice apiv1connect.PartitionServiceClient
-		projectservice   apiv1connect.ProjectServiceClient
-		tenantservice    apiv1connect.TenantServiceClient
-		tokenservice     apiv1connect.TokenServiceClient
-		userservice      apiv1connect.UserServiceClient
-		versionservice   apiv1connect.VersionServiceClient
+	apiv2 struct {
+		healthservice    apiv2connect.HealthServiceClient
+		ipservice        apiv2connect.IPServiceClient
+		methodservice    apiv2connect.MethodServiceClient
+		partitionservice apiv2connect.PartitionServiceClient
+		projectservice   apiv2connect.ProjectServiceClient
+		tenantservice    apiv2connect.TenantServiceClient
+		tokenservice     apiv2connect.TokenServiceClient
+		userservice      apiv2connect.UserServiceClient
+		versionservice   apiv2connect.VersionServiceClient
 	}
 )
 
@@ -59,19 +59,19 @@ func New(config DialConfig) Client {
 	}
 }
 
-func (c client) Adminv1() Adminv1 {
-	a := &adminv1{
-		partitionservice: adminv1connect.NewPartitionServiceClient(
+func (c client) Adminv2() Adminv2 {
+	a := &adminv2{
+		partitionservice: adminv2connect.NewPartitionServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		tenantservice: adminv1connect.NewTenantServiceClient(
+		tenantservice: adminv2connect.NewTenantServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		tokenservice: adminv1connect.NewTokenServiceClient(
+		tokenservice: adminv2connect.NewTokenServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
@@ -80,59 +80,59 @@ func (c client) Adminv1() Adminv1 {
 	return a
 }
 
-func (c *adminv1) Partition() adminv1connect.PartitionServiceClient {
+func (c *adminv2) Partition() adminv2connect.PartitionServiceClient {
 	return c.partitionservice
 }
-func (c *adminv1) Tenant() adminv1connect.TenantServiceClient {
+func (c *adminv2) Tenant() adminv2connect.TenantServiceClient {
 	return c.tenantservice
 }
-func (c *adminv1) Token() adminv1connect.TokenServiceClient {
+func (c *adminv2) Token() adminv2connect.TokenServiceClient {
 	return c.tokenservice
 }
 
-func (c client) Apiv1() Apiv1 {
-	a := &apiv1{
-		healthservice: apiv1connect.NewHealthServiceClient(
+func (c client) Apiv2() Apiv2 {
+	a := &apiv2{
+		healthservice: apiv2connect.NewHealthServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		ipservice: apiv1connect.NewIPServiceClient(
+		ipservice: apiv2connect.NewIPServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		methodservice: apiv1connect.NewMethodServiceClient(
+		methodservice: apiv2connect.NewMethodServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		partitionservice: apiv1connect.NewPartitionServiceClient(
+		partitionservice: apiv2connect.NewPartitionServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		projectservice: apiv1connect.NewProjectServiceClient(
+		projectservice: apiv2connect.NewProjectServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		tenantservice: apiv1connect.NewTenantServiceClient(
+		tenantservice: apiv2connect.NewTenantServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		tokenservice: apiv1connect.NewTokenServiceClient(
+		tokenservice: apiv2connect.NewTokenServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		userservice: apiv1connect.NewUserServiceClient(
+		userservice: apiv2connect.NewUserServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
 		),
-		versionservice: apiv1connect.NewVersionServiceClient(
+		versionservice: apiv2connect.NewVersionServiceClient(
 			c.config.HttpClient(),
 			c.config.BaseURL,
 			compress.WithAll(compress.LevelBalanced),
@@ -141,30 +141,30 @@ func (c client) Apiv1() Apiv1 {
 	return a
 }
 
-func (c *apiv1) Health() apiv1connect.HealthServiceClient {
+func (c *apiv2) Health() apiv2connect.HealthServiceClient {
 	return c.healthservice
 }
-func (c *apiv1) IP() apiv1connect.IPServiceClient {
+func (c *apiv2) IP() apiv2connect.IPServiceClient {
 	return c.ipservice
 }
-func (c *apiv1) Method() apiv1connect.MethodServiceClient {
+func (c *apiv2) Method() apiv2connect.MethodServiceClient {
 	return c.methodservice
 }
-func (c *apiv1) Partition() apiv1connect.PartitionServiceClient {
+func (c *apiv2) Partition() apiv2connect.PartitionServiceClient {
 	return c.partitionservice
 }
-func (c *apiv1) Project() apiv1connect.ProjectServiceClient {
+func (c *apiv2) Project() apiv2connect.ProjectServiceClient {
 	return c.projectservice
 }
-func (c *apiv1) Tenant() apiv1connect.TenantServiceClient {
+func (c *apiv2) Tenant() apiv2connect.TenantServiceClient {
 	return c.tenantservice
 }
-func (c *apiv1) Token() apiv1connect.TokenServiceClient {
+func (c *apiv2) Token() apiv2connect.TokenServiceClient {
 	return c.tokenservice
 }
-func (c *apiv1) User() apiv1connect.UserServiceClient {
+func (c *apiv2) User() apiv2connect.UserServiceClient {
 	return c.userservice
 }
-func (c *apiv1) Version() apiv1connect.VersionServiceClient {
+func (c *apiv2) Version() apiv2connect.VersionServiceClient {
 	return c.versionservice
 }

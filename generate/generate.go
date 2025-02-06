@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	sprig "github.com/go-task/slim-sprig/v3"
-	v1 "github.com/metal-stack/api/go/metalstack/api/v1"
+	v1 "github.com/metal-stack/api/go/metalstack/api/v2"
 	"github.com/metal-stack/api/go/permissions"
 	"github.com/metal-stack/api/go/tests/protoparser"
 
