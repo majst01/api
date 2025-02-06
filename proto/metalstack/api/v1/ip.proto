@@ -109,22 +109,22 @@ message IPServiceAllocateRequest {
   // Project of the ip
   string project = 2 [(buf.validate.field).string.uuid = true];
   // Name of the ip
-  string name = 3 [(buf.validate.field).string = {
+  optional string name = 3 [(buf.validate.field).string = {
     min_len: 2
     max_len: 128
   }];
   // Description of the ip
-  string description = 4 [(buf.validate.field).string = {max_len: 128}];
+  optional string description = 4 [(buf.validate.field).string = {max_len: 128}];
   // IP if given try to allocate this ip if still available
   optional string ip = 5 [(buf.validate.field).string.ip = true];
   // MachineId for which this ip should get allocated
   optional string machine_id = 6 [(buf.validate.field).string.uuid = true];
   // Tags to put onto the ip
   repeated string tags = 8 [(buf.validate.field).repeated.max_items = 100];
-  // Static if set to true, this will be a Static ip
+  // Type of the IP, ether ephemeral (default), or static
   optional IPType type = 9 [(buf.validate.field).enum.defined_only = true];
   // Addressfamily of the IP to allocate, defaults to ipv4
-  optional IPAddressFamily af = 10 [(buf.validate.field).enum.defined_only = true];
+  optional IPAddressFamily address_family = 10 [(buf.validate.field).enum.defined_only = true];
 }
 
 // IPServiceUpdateRequest is the request payload for a ip update request
@@ -173,7 +173,7 @@ message IPServiceListRequest {
   // Static if set to true, this will be a Static ip
   optional IPType type = 9 [(buf.validate.field).enum.defined_only = true];
   // Addressfamily of the IPs to list, defaults to all addressfamilies
-  optional IPAddressFamily af = 10 [(buf.validate.field).enum.defined_only = true];
+  optional IPAddressFamily address_family = 10 [(buf.validate.field).enum.defined_only = true];
 }
 
 // IPServiceDeleteRequest is the request payload for a ip delete request
